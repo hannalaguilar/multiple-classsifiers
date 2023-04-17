@@ -32,8 +32,7 @@ class RandomForest:
             raise TypeError('random_state must be an integer')
         if not isinstance(self.n_trees, int):
             raise TypeError('n_trees must be an integer')
-        if not isinstance(self.n_random_features, NumberRandomFeatures) or \
-                not isinstance(self.n_random_features, int):
+        if not isinstance(self.n_random_features, (NumberRandomFeatures, int)):
             raise TypeError('n_random_features must be a NumberRandomFeatures or integer')
         if not isinstance(self.base_learner, DecisionTreeClassifier):
             raise TypeError('base_learner must be an instance of '
@@ -55,17 +54,20 @@ class RandomForest:
         self.n_features = X.shape[1]
 
         # set max features
-        if self.n_random_features == NumberRandomFeatures.SQUARED:
-            max_features = max(1, int(np.sqrt(self.n_features)))
-        elif self.n_random_features == NumberRandomFeatures.LOG:
-            max_features = max(1, int(np.log2(self.n_features)))
-        if isinstance(self.n_random_features, int):
-            max_features = self.n_random_features
+        if self.n_random_features is NumberRandomFeatures.SQUARED:
+            max_features = int(np.sqrt(self.n_features))
+        elif self.n_random_features is NumberRandomFeatures.LOG:
+            max_features = int(np.log2(self.n_features))
+        else:
+            if isinstance(self.n_random_features, int):
+                max_features = self.n_random_features
 
         # check types
         self._check_type()
+
         # random state generator with self.random_state
         rs_generator = np.random.RandomState(self.random_state)
+
         # list of different DecisionTrees instances
         trees = [self._make_one_tree(rs_generator) for i in
                  range(self.n_trees)]
@@ -75,31 +77,26 @@ class RandomForest:
         assert len(self.trained_trees) == self.n_trees
 
     def predict(self, X: Union[list, np.ndarray]) -> np.ndarray:
+        """
+        Predict the class labels for the input data.
+
+        Args:
+            X: The input data to predict on.
+
+        Returns:
+            The predicted class labels.
+        """
+
         if isinstance(X, list):
             X = np.array(X)
-        assert X.shape[1] == self.n_features, f'X should have {self.n_features} features, but it has {X.shape[1]}'
+        assert X.shape[1] == self.n_features, \
+            f'X should have {self.n_features} features, but it has {X.shape[1]}'
         predictions = np.array([tree.predict(X) for tree
                                 in self.trained_trees]).astype(
-            np.int32).flatten()
+            np.int32)
         assert predictions.shape[0] == self.n_trees
-        prediction = np.argmax(np.bincount(predictions))
+        _dist = np.apply_along_axis(np.bincount, axis=1, arr=predictions)
+        prediction = np.argmax(_dist, axis=1)
         return prediction
 
 
-from sklearn.datasets import make_classification
-
-X, y = make_classification(n_samples=100, n_features=4,
-                           n_informative=3, n_redundant=0, n_repeated=0,
-                           n_classes=3, random_state=42)
-
-clf = RandomForestClassifier(max_depth=2, random_state=0, max_features=3)
-clf.fit(X, y)
-clf.predict([[0, 0, 0, 0]])
-DecisionTreeClassifier()
-
-clf2 = RandomForest(random_state=0)
-tt = clf2.fit(X, y)
-preds = np.array([estimator.predict([[0, 0, 0, 0]]) for estimator in
-                  clf.estimators_]).astype(np.int32).flatten()
-np.argmax(np.bincount(preds))
-clf2.predict([[0, 0]])
