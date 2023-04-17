@@ -7,14 +7,14 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Union, Optional
 import numpy as np
-import pandas as pd
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
+from src.decision_tree import DecisionTree
 
 
 class NumberRandomFeatures(Enum):
-    SQUARED = 'squared'
-    LOG = 'log'
+    SQUARED = auto()
+    LOG = auto()
 
 
 @dataclass
@@ -22,10 +22,11 @@ class RandomForest:
     random_state: int = field(default=0)
     n_trees: int = field(default=100)
     n_random_features: Union[int, NumberRandomFeatures] = field(default=NumberRandomFeatures.SQUARED)
-    base_learner: DecisionTreeClassifier = field(default=DecisionTreeClassifier(
-                                                     criterion='gini'))
+    base_learner: DecisionTree = field(default=DecisionTree())
+    max_depth: int = field(default=2)
     trained_trees: Optional[list] = field(init=False, default=None)
     n_features: Optional[int] = field(init=False, default=None)
+    n_samples: Optional[int] = field(init=False, default=None)
 
     def _check_type(self) -> None:
         if not isinstance(self.random_state, int):
@@ -34,17 +35,17 @@ class RandomForest:
             raise TypeError('n_trees must be an integer')
         if not isinstance(self.n_random_features, (NumberRandomFeatures, int)):
             raise TypeError('n_random_features must be a NumberRandomFeatures or integer')
-        if not isinstance(self.base_learner, DecisionTreeClassifier):
-            raise TypeError('base_learner must be an instance of '
-                            'DecisionTreeClassifier')
+        if not isinstance(self.base_learner, DecisionTree):
+            raise TypeError('base_learner must be an instance of DecisionTree')
 
     def _make_one_tree(self,
-                       rs_generator: np.random.RandomState) -> DecisionTreeClassifier:
+                       rs_generator: np.random.RandomState) -> DecisionTree:
         # copy the base learner algorithm (Decision Tree CART)
         tree = copy.deepcopy(self.base_learner)
         # get random state
         random_state = rs_generator.randint(np.iinfo(np.int32).max)
         to_set = {'random_state': random_state}
+        print(to_set)
         # set random state
         tree.set_params(**to_set)
         return tree
@@ -52,6 +53,7 @@ class RandomForest:
     def fit(self, X: np.ndarray, y: np.ndarray) -> None:
 
         self.n_features = X.shape[1]
+        self.n_samples = X.shape[0]
 
         # set max features
         if self.n_random_features is NumberRandomFeatures.SQUARED:
@@ -68,13 +70,32 @@ class RandomForest:
         # random state generator with self.random_state
         rs_generator = np.random.RandomState(self.random_state)
 
+        # base_learner
+        params = {'max_depth': self.max_depth,
+                  'max_features': 'sqrt',
+                  'random_state': self.random_state}
+        self.base_learner.set_params(**params)
+
         # list of different DecisionTrees instances
         trees = [self._make_one_tree(rs_generator) for i in
                  range(self.n_trees)]
+
+        # bootstrapped dataset
+        # indices = .randint(0, n_samples, n_samples_bootstrap)
+
         # train each tree and save it in a list
+
         self.trained_trees = [tree.fit(X, y) for tree in trees]
 
         assert len(self.trained_trees) == self.n_trees
+
+    def _fit_one_tree(self, X, tree):
+        rs_generator = np.random.RandomState(tree.random_state)
+        indices = rs_generator.randint(0, self.n_samples,
+                                                 self.n_samples)
+        X_bootstrapped = X[indices]
+
+
 
     def predict(self, X: Union[list, np.ndarray]) -> np.ndarray:
         """
