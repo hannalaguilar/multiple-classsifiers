@@ -4,12 +4,9 @@ Implementation of the Random Forest algorithm.
 import copy
 from enum import Enum, auto
 from dataclasses import dataclass, field
-from pathlib import Path
 from typing import Union, Optional
 import numpy as np
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import RandomForestClassifier
-from src.decision_tree import DecisionTree
+from src.algorithms.decision_tree import DecisionTree
 
 
 class NumberRandomFeatures(Enum):
@@ -89,12 +86,13 @@ class RandomForest:
 
         assert len(self.trained_trees) == self.n_trees
 
-    def _fit_one_tree(self, X, tree):
+    def _fit_one_tree(self, X, y, tree, max_features):
+        n_samples = X.shape[0]
+        n_features = X.shape[1]
         rs_generator = np.random.RandomState(tree.random_state)
         indices = rs_generator.randint(0, self.n_samples,
                                                  self.n_samples)
         X_bootstrapped = X[indices]
-
 
 
     def predict(self, X: Union[list, np.ndarray]) -> np.ndarray:

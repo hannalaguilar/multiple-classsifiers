@@ -1,9 +1,8 @@
 import numpy as np
-from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.datasets import make_classification
 from sklearn.metrics import accuracy_score
-from src.random_forest import RandomForest, DecisionTree
+from src.algorithms.random_forest import RandomForest
 
 X, y = make_classification(n_samples=100, n_features=10,
                            n_informative=3, n_redundant=0, n_repeated=0,
