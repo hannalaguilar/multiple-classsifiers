@@ -1,24 +1,29 @@
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.datasets import make_classification
 from sklearn.metrics import accuracy_score
 from src.algorithms.random_forest import RandomForest
 
-X, y = make_classification(n_samples=100, n_features=10,
+
+dt = DecisionTreeClassifier(max_features=3)
+
+X, y = make_classification(n_samples=100, n_features=4,
                            n_informative=3, n_redundant=0, n_repeated=0,
                            n_classes=3, random_state=42)
 
-clf = RandomForestClassifier(max_depth=2, random_state=0, n_estimators=10)
+clf = RandomForestClassifier(max_depth=2, random_state=0, n_estimators=100)
 clf.fit(X, y)
 x = [[0, 0, 0, 0]]
 pred1 = clf.predict(X)
-print(accuracy_score(y, pred1))
+# print(accuracy_score(y, pred1))
 
 print('---------------------------------------------------')
 clf2 = RandomForest(random_state=0)
-# tt = clf2.fit(X, y)
-# pred2 = clf2.predict(X)
-# print(accuracy_score(y, pred2))
+tt = clf2.fit(X, y)
+pred2 = clf2.predict(x)
+clf2.predict_proba(X)
+print(accuracy_score(y, pred2))
 
 
 def test_gini():
