@@ -67,6 +67,11 @@ class DecisionTree:
                 op_2 = Operator.NE
         return op_1, op_2
 
+    @staticmethod
+    def _compute_leaf_value(y: np.ndarray):
+        unique, counts = np.unique(y, return_counts=True)
+        return unique[np.argmax(counts)]
+
     def fit(self, X, y, cat_features: Optional[list] = None):
         self.n_classes = len(np.unique(y))
         self.tree = self._build_tree(X, y, 0, cat_features)
@@ -184,11 +189,6 @@ class DecisionTree:
                         best_gini_gain = gini_gain
 
         return best_gini_gain, best_feature_idx, best_threshold
-
-    @staticmethod
-    def _compute_leaf_value(y: np.ndarray):
-        unique, counts = np.unique(y, return_counts=True)
-        return unique[np.argmax(counts)]
 
     def _compute_class_dist(self, y: np.ndarray) -> np.ndarray:
         class_dist = np.zeros(self.n_classes)

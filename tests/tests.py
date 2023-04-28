@@ -1,7 +1,10 @@
+"""
+Test for the tree algorithms
+"""
 from pathlib import Path
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.tree import DecisionTreeClassifier, plot_tree
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.datasets import make_classification, load_iris
 from sklearn.metrics import accuracy_score
@@ -10,16 +13,38 @@ import pandas as pd
 from src.algorithms.decision_tree import DecisionTree
 from src.algorithms.random_forest import RandomForest
 
-
 CURRENT_PATH = Path(__file__).parent
 
 
 def test_gini():
+    # data
+    X, y = load_iris(return_X_y=True)
+
+    # gini sklearn
+    clf_sklearn = DecisionTreeClassifier(random_state=0,
+                                         max_leaf_nodes=3)
+    clf_sklearn.fit(X, y)
+    gini_sklearn = clf_sklearn.tree_.impurity[0]
+
+    # my algorithm
     dec_tree = DecisionTree()
+    gini_src = dec_tree._gini(y)
+
+    # test
+    assert gini_sklearn == gini_src
+
+
+def test_gini_gain():
+    # data
     left_class = np.array(['C+', 'C+', 'C-', 'C+', 'C-', 'C+'])
     right_class = np.array(['C-', 'C-'])
 
-    assert dec_tree._gini_gain(left_class, right_class) == 0.5 - 1 / 3
+    # my algorithm
+    dec_tree = DecisionTree()
+    gini_gain = dec_tree._gini_gain(left_class, right_class)
+
+    # test
+    assert gini_gain == 0.5 - 1 / 3
 
 
 def test_best_split():
@@ -28,9 +53,12 @@ def test_best_split():
     X = df.iloc[:, :-1].values
     y = df.iloc[:, -1].values
 
+    # my algorithm
     dec_tree = DecisionTree()
-    best_gini, best_feature_idx, best_threshold = dec_tree._best_split(X, y, [0, 1, 2])
-
+    best_gini, best_feature_idx, best_threshold = dec_tree._best_split(X, y,
+                                                                       [0, 1,
+                                                                        2])
+    # test
     assert np.round(best_gini, 3) == 0.5 - 0.2
     assert best_feature_idx == 0
     assert best_threshold == 'blue'
