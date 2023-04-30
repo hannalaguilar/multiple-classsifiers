@@ -4,14 +4,9 @@ Implementation of the Decision Tree algorithm using CART method.
 from __future__ import annotations
 from typing import Optional, Union
 import operator
-from enum import Enum, auto
+from enum import Enum
 from dataclasses import dataclass
 import numpy as np
-import random
-
-class RandomFeaturesMethods(Enum):
-    SQUARED = auto()
-    LOG = auto()
 
 
 class Operator(Enum):

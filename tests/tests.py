@@ -10,10 +10,9 @@ from sklearn.datasets import make_classification, load_iris
 from sklearn.metrics import accuracy_score
 import pandas as pd
 
-from src.algorithms.decision_tree import DecisionTree
-from src.algorithms.ensemble import DecisionForest, \
-    RandomFeaturesMethods, RandomForest
-from src.algorithms.random_forest import _RandomForest
+from src.decision_tree import DecisionTree
+from src.ensemble_algorithms import DecisionForest, RandomForest
+
 
 CURRENT_PATH = Path(__file__).parent
 
@@ -125,7 +124,7 @@ def test_random_forest():
 
     # test
     print(f'accuracy sklearn: {accuracy_sk:.3f}, '
-          f'accuracy my Algorithm: {accuracy_src:.3f}')
+          f'accuracy my algorithm: {accuracy_src:.3f}')
     np.testing.assert_allclose(accuracy_sk, accuracy_src, atol=0.2)
 
 
@@ -141,7 +140,8 @@ def test_decision_forest():
 
     # sklearn
     max_depth = np.random.randint(2, 6)
-    n_trees = 10
+    max_random_features = 0.75
+    n_trees = np.random.randint(0, 20)
     estimator = DecisionTreeClassifier(random_state=0,
                                        max_depth=max_depth)
 
@@ -149,7 +149,7 @@ def test_decision_forest():
                                     random_state=0,
                                     n_estimators=n_trees,
                                     bootstrap=False,
-                                    max_features=0.75)
+                                    max_features=max_random_features)
     clf_sklearn.fit(X_train, y_train)
     accuracy_sk = clf_sklearn.score(X_test, y_test)
 
@@ -157,10 +157,11 @@ def test_decision_forest():
     clf_src = DecisionForest(random_state=0,
                              n_trees=n_trees,
                              max_depth=max_depth,
-                             max_random_features='runif')
+                             max_random_features=max_random_features)
     clf_src.fit(X_train, y_train)
     pred_clf_src = clf_src.predict(X_test)
     accuracy_src = accuracy_score(y_test, pred_clf_src)
 
     print(f'accuracy sklearn: {accuracy_sk:.3f}, '
           f'accuracy my algorithm: {accuracy_src:.3f}')
+    np.testing.assert_allclose(accuracy_sk, accuracy_src, atol=0.2)
