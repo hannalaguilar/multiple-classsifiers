@@ -1,5 +1,7 @@
 """
-ESCRIBIR XXXXX
+This module contains functions and classes to experiment with Random Forest and
+Decision Forest algorithms using different hyperparameters and datasets.
+
 """
 from typing import Optional, Union
 from pathlib import Path
@@ -9,7 +11,6 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder
 
 from src.forest_ensemble import RandomForest, DecisionForest
 from src.forest_tools import FMethodRF, FMethodDF
@@ -25,8 +26,10 @@ F_DECISION_FOREST = [0.25, 0.5, 0.75, FMethodDF.RUNIF]
 @dataclass
 class Dataset:
     """
-    This is the main class for handle data.
+    Main class for handle datasets.
+
     """
+
     name: str
     cat_features: Optional[list[int]] = None
 
@@ -47,6 +50,11 @@ class Dataset:
 
 @dataclass
 class Experiment:
+    """
+    Class for experimenting with Random Forest and Decision Forest algorithms.
+
+    """
+
     algorithm_name: str
     n_trees: int
     max_random_features: Union[str, float, int]
@@ -75,6 +83,9 @@ class Experiment:
 
 
 def print_verbose(result: dict) -> None:
+    """
+    Prints a dictionary in a verbose format.
+    """
     print("{" + ", ".join(f"'{k}': {v}" for k, v in result.items()) + "}")
 
 
@@ -86,6 +97,12 @@ def run_experiment(name: str,
                    X_test: np.ndarray,
                    y_test: np.ndarray,
                    cat_features: Optional[list[int]] = None) -> dict:
+    """
+    Runs an experiment using the Experiment class to test the accuracy
+    of the Random Forest or Decision Forest algorithms.
+
+    """
+
     clf = Experiment(name, n_trees, max_random_features,
                      X_train, y_train, X_test, y_test,
                      cat_features=cat_features)
@@ -102,6 +119,13 @@ def forest_interpreter(X_train: np.ndarray,
                        y_test: np.ndarray,
                        cat_features: Optional[list[int]] = None,
                        verbose: bool = True) -> pd.DataFrame:
+    """
+    Runs a series of experiments with Random Forest and Decision Forest
+    algorithms with different hyperparameters on the given train and test data,
+    and returns a dataframe with the results.
+
+    """
+
     data = []
     for name in ALGORITHM_NAMES:
         for n_trees in N_TREES:
@@ -126,8 +150,12 @@ def forest_interpreter(X_train: np.ndarray,
     return data_df
 
 
-def main():
-    # Three datasets
+def main() -> None:
+    """Train and test several datasets using the
+    forest_interpreter function and save the results to a CSV file.
+    """
+
+    # Five datasets
     names = ['titanic', 'iris', 'glass', 'wine-red', 'wine-white']
     cat_features_datasets = [[0, 1, 6], None, None, None, None]
     datasets = [Dataset(name, cat) for name, cat in zip(names,
