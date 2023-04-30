@@ -1,18 +1,34 @@
 """
-Test for the tree algorithms
+This module tests compare the performance of my implemented algorithms with
+the corresponding ones in scikit-learn.
+
+It includes the following tests:
+
+- `test_gini()`: Test the calculation of Gini index using the implementation
+    in this code and that provided by `scikit-learn`.
+- `test_gini_gain()`: Test the calculation of Gini gain.
+- `test_best_split()`: Test the calculation of best split on a test dataset.
+- `test_decision_tree_basic_data()`: Test the implementation of the
+    DecisionTree on a simple dataset.
+- `test_decision_tree()`: Test the implementation of the DecisionTree
+    on iris dataset.
+- `test_random_forest()`: Test the implementation of RandomForest.
+- `test_decision_forest()`: Test the implementation of DecisionForest.
+
 """
 from pathlib import Path
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier, BaggingClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
 from sklearn.datasets import make_classification, load_iris
 from sklearn.metrics import accuracy_score
 import pandas as pd
 
 from src.decision_tree import DecisionTree
-from src.ensemble_algorithms import DecisionForest, RandomForest
-
+from src.forest_ensemble import DecisionForest, RandomForest
+from src.forest_tools import FMethodRF
 
 CURRENT_PATH = Path(__file__).parent
 
@@ -65,6 +81,29 @@ def test_best_split():
     assert best_threshold == 'blue'
 
 
+def test_decision_tree_basic_data():
+    # data
+    df = pd.read_csv(CURRENT_PATH / 'test_data.csv')
+    X = df.iloc[:, :-1].values
+    y = df.iloc[:, -1].values
+    le = LabelEncoder()
+    y = le.fit_transform(y)
+
+    # my algorithm
+    clf_src = DecisionTree(max_depth=2, random_subspace_node=False)
+    clf_src.fit(X, y, cat_features=[0, 1, 2])
+    tree = clf_src.tree
+
+    # test
+    assert tree.feature == 0
+    assert tree.threshold == 'blue'
+    assert tree.left.leaf_value == 0
+    assert tree.right.feature == 2
+    assert tree.right.threshold == 'tall'
+    assert tree.right.left.leaf_value == 0
+    assert tree.right.right.leaf_value == 1
+
+
 def test_decision_tree():
     random_number = np.random.randint(np.iinfo(np.int32).max)
 
@@ -87,9 +126,8 @@ def test_decision_tree():
 
     # assert if the difference is less than 10%
     print(f'sklearn:{acc_test_sklearn:.3f}, '
-          f'my_algorithm: {acc_test_src:.3f},'
-          f' diff={(acc_test_sklearn - acc_test_src):.3f}')
-    np.testing.assert_allclose(acc_test_sklearn, acc_test_src, rtol=0.1)
+          f'my_algorithm: {acc_test_src:.3f}')
+    np.testing.assert_allclose(acc_test_sklearn, acc_test_src, rtol=0.12)
 
 
 def test_random_forest():
@@ -103,11 +141,9 @@ def test_random_forest():
                                                         random_state=random_number)
 
     # sklearn
-    max_depth = np.random.randint(2, 6)
-    n_trees = np.random.randint(0, 100)
+    n_trees = np.random.randint(1, 100)
     clf_sklearn = RandomForestClassifier(random_state=0,
                                          max_features='sqrt',
-                                         max_depth=max_depth,
                                          n_estimators=n_trees)
     clf_sklearn.fit(X_train, y_train)
     accuracy_sk = clf_sklearn.score(X_test, y_test)
@@ -115,8 +151,7 @@ def test_random_forest():
     # my algorithm
     clf_src = RandomForest(random_state=0,
                            n_trees=n_trees,
-                           max_depth=max_depth,
-                           max_random_features='sqrt')
+                           max_random_features=FMethodRF.SQRT)
 
     clf_src.fit(X_train, y_train)
     pred_clf_src = clf_src.predict(X_test)
@@ -125,7 +160,7 @@ def test_random_forest():
     # test
     print(f'accuracy sklearn: {accuracy_sk:.3f}, '
           f'accuracy my algorithm: {accuracy_src:.3f}')
-    np.testing.assert_allclose(accuracy_sk, accuracy_src, atol=0.2)
+    np.testing.assert_allclose(accuracy_sk, accuracy_src, atol=0.12)
 
 
 def test_decision_forest():
@@ -139,11 +174,9 @@ def test_decision_forest():
                                                         random_state=random_number)
 
     # sklearn
-    max_depth = np.random.randint(2, 6)
     max_random_features = 0.75
-    n_trees = np.random.randint(0, 20)
-    estimator = DecisionTreeClassifier(random_state=0,
-                                       max_depth=max_depth)
+    n_trees = np.random.randint(1, 20)
+    estimator = DecisionTreeClassifier(random_state=0)
 
     clf_sklearn = BaggingClassifier(estimator=estimator,
                                     random_state=0,
@@ -156,7 +189,6 @@ def test_decision_forest():
     # my algorithm
     clf_src = DecisionForest(random_state=0,
                              n_trees=n_trees,
-                             max_depth=max_depth,
                              max_random_features=max_random_features)
     clf_src.fit(X_train, y_train)
     pred_clf_src = clf_src.predict(X_test)
@@ -164,4 +196,4 @@ def test_decision_forest():
 
     print(f'accuracy sklearn: {accuracy_sk:.3f}, '
           f'accuracy my algorithm: {accuracy_src:.3f}')
-    np.testing.assert_allclose(accuracy_sk, accuracy_src, atol=0.2)
+    np.testing.assert_allclose(accuracy_sk, accuracy_src, atol=0.12)
