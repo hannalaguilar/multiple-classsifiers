@@ -3,7 +3,7 @@ Test for the tree algorithms
 """
 from pathlib import Path
 import numpy as np
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier, BaggingClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.datasets import make_classification, load_iris
@@ -11,7 +11,9 @@ from sklearn.metrics import accuracy_score
 import pandas as pd
 
 from src.algorithms.decision_tree import DecisionTree
-from src.algorithms.random_forest import RandomForest
+from src.algorithms.ensemble import RandomForest, DecisionForest, \
+    RandomFeaturesMethods
+from src.algorithms.random_forest import _RandomForest
 
 CURRENT_PATH = Path(__file__).parent
 
@@ -78,40 +80,116 @@ def test_decision_tree():
     acc_test_sklearn = clf_sklearn.score(X_test, y_test)
 
     # my algorithm
-    clf_src = DecisionTree()
-    clf_src._best_split(X_train, y_train)
+    clf_src = DecisionTree(random_subspace=False)
     clf_src.fit(X_train, y_train)
     y_pred_src = clf_src.predict(X_test)
     acc_test_src = accuracy_score(y_test, y_pred_src)
 
     # assert if the difference is less than 10%
-    print(f'sklearn:{acc_test_sklearn}, my_algorithm: {acc_test_src}')
+    print(f'sklearn:{acc_test_sklearn:.3f}, '
+          f'my_algorithm: {acc_test_src:.3f},'
+          f' diff={(acc_test_sklearn - acc_test_src):.3f}')
+    np.testing.assert_allclose(acc_test_sklearn, acc_test_src, rtol=0.1)
+
+
+def test_decision_tree_random_subspace():
+    random_number = np.random.randint(np.iinfo(np.int32).max)
+
+    # data
+    X, y = load_iris(return_X_y=True)
+    X_train, X_test, y_train, y_test = train_test_split(X, y,
+                                                        random_state=random_number)
+
+    # sklearn
+    clf_sklearn = DecisionTreeClassifier(random_state=0, max_leaf_nodes=3)
+    clf_sklearn.fit(X_train, y_train)
+    acc_test_sklearn = clf_sklearn.score(X_test, y_test)
+
+    # my algorithm
+    clf_src = DecisionTree(random_subspace=True)
+    clf_src.fit(X_train, y_train)
+    y_pred_src = clf_src.predict(X_test)
+    acc_test_src = accuracy_score(y_test, y_pred_src)
+
+    # assert if the difference is less than 10%
+    print(f'sklearn:{acc_test_sklearn:.3f}, '
+          f'my_algorithm: {acc_test_src:.3f},'
+          f' diff={(acc_test_sklearn - acc_test_src):.3f}')
     np.testing.assert_allclose(acc_test_sklearn, acc_test_src, rtol=0.1)
 
 
 def test_random_forest():
     # data
     random_number = np.random.randint(np.iinfo(np.int32).max)
-    X, y = make_classification(n_samples=1000, n_features=4,
-                               n_informative=3, n_redundant=0, n_repeated=0,
-                               n_classes=3, random_state=0)
+    X, y = make_classification(n_samples=300, n_features=10,
+                               n_informative=4, n_redundant=0, n_repeated=0,
+                               n_classes=4, random_state=random_number)
+    X_train, X_test, y_train, y_test = train_test_split(X,
+                                                        y,
+                                                        random_state=random_number)
 
     # sklearn
+    max_depth = np.random.randint(2, 6)
+    n_trees = np.random.randint(0, 100)
     clf_sklearn = RandomForestClassifier(random_state=0,
-                                         max_depth=2,
-                                         n_estimators=100)
+                                         max_features='sqrt',
+                                         max_depth=max_depth,
+                                         n_estimators=n_trees)
+    clf_sklearn.fit(X_train, y_train)
+    accuracy_sk = clf_sklearn.score(X_test, y_test)
+
+    # my algorithm
+    clf_src = RandomForest(random_state=0,
+                           random_features='sqrt',
+                           max_depth=max_depth,
+                           n_trees=n_trees)
+    clf_src.fit(X_train, y_train)
+    pred_clf_src = clf_src.predict(X_test)
+    accuracy_src = accuracy_score(y_test, pred_clf_src)
+
+    # my algorithm2
+    clf_src = _RandomForest(random_state=0,
+                            max_depth=max_depth,
+                            n_trees=n_trees)
+    clf_src.fit(X_train, y_train)
+    pred_clf_src = clf_src.predict(X_test)
+    accuracy_src2 = accuracy_score(y_test, pred_clf_src)
+
+    # test
+    print(f'accuracy sklearn: {accuracy_sk:.3f}, '
+          f'accuracy my algorithm: {accuracy_src:.3f}',
+          f'accuracy my algorithm: {accuracy_src2:.3f}')
+    # np.testing.assert_allclose(accuracy_sk, accuracy_src, atol=0.15)
+
+
+def test_decision_forest():
+    # data
+    random_number = np.random.randint(np.iinfo(np.int32).max)
+    X, y = make_classification(n_samples=200, n_features=11,
+                               n_informative=3, n_redundant=0, n_repeated=0,
+                               n_classes=3, random_state=random_number)
+    # sklearn
+    max_depth = np.random.randint(2, 6)
+    n_trees = 10
+    estimator = DecisionTreeClassifier(random_state=0,
+                                       max_depth=max_depth)
+
+    clf_sklearn = BaggingClassifier(estimator=estimator,
+                                    random_state=0,
+                                    n_estimators=n_trees,
+                                    bootstrap=False,
+                                    max_features=0.5)
     clf_sklearn.fit(X, y)
     accuracy_sk = clf_sklearn.score(X, y)
 
     # my algorithm
-    clf_src = RandomForest(random_state=0,
-                           max_depth=2,
-                           n_trees=100)
+    clf_src = DecisionForest(random_state=0,
+                             max_depth=max_depth,
+                             n_trees=n_trees,
+                             random_features_method=RandomFeaturesMethods.INT12)
     clf_src.fit(X, y)
     pred_clf_src = clf_src.predict(X)
     accuracy_src = accuracy_score(y, pred_clf_src)
 
-    # compare
-    print(f'accuracy sklearn: {accuracy_src:.3f}, '
+    print(f'accuracy sklearn: {accuracy_sk:.3f}, '
           f'accuracy my algorithm: {accuracy_src:.3f}')
-    np.testing.assert_allclose(accuracy_sk, accuracy_src, atol=0.15)

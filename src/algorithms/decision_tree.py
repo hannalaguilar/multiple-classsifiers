@@ -2,12 +2,16 @@
 Implementation of the Decision Tree algorithm using CART method.
 """
 from __future__ import annotations
-from typing import List, Optional, Union
+from typing import Optional, Union
 import operator
-from enum import Enum
+from enum import Enum, auto
 from dataclasses import dataclass
 import numpy as np
-from sklearn.tree import DecisionTreeClassifier
+import random
+
+class RandomFeaturesMethods(Enum):
+    SQUARED = auto()
+    LOG = auto()
 
 
 class Operator(Enum):
@@ -32,23 +36,47 @@ class Node:
 class DecisionTree:
 
     def __init__(self,
-                 random_state=0,
-                 criterion='gini',
-                 splitter='best',
-                 max_depth=2,
-                 min_samples_split=2):
-        self.random_state: int = random_state
-        self.criterion: str = criterion
-        self.splitter: str = splitter
-        self.max_depth: int = max_depth
-        self.min_samples_split: int = min_samples_split
+                 random_state: int = 0,
+                 max_depth: int = 2,
+                 min_samples_split: int = 2,
+                 max_random_features: Union[str, int] = 'sqrt',
+                 random_subspace: bool = False):
 
-        self.n_classes = None
-        self.tree = None
+        # Hyper parameters
+        self.random_state = random_state
+        self.max_depth = max_depth
+        self.min_samples_split = min_samples_split
+        self.max_random_features = max_random_features
+        self.random_subspace = random_subspace
+
+        # Data
+        self.n_classes: Optional[int] = None
+        self.n_features: Optional[int] = None
+        self.tree: Optional[Node] = None
+
+    def __repr__(self):
+        return f'DecisionTree(random_state={self.random_state}, ' \
+               f'max_depth={self.max_depth}, n_features={self.n_features})'
+
+    @property
+    def criterion(self):
+        return 'gini'
 
     @property
     def method(self):
         return 'CART'
+
+    @property
+    def F(self):
+        method_functions = {'sqrt': lambda n: int(np.sqrt(n)),
+                            'log': lambda n: int(np.log2(n))}
+        if self.max_random_features in method_functions.keys():
+            return method_functions[self.max_random_features](self.n_features)
+        elif isinstance(self.max_random_features, int):
+            return self.max_random_features
+        else:
+            raise TypeError('random_features must be an integer, '
+                            '"sqrt" or "log"')
 
     @staticmethod
     def _gini(y: np.ndarray) -> float:
@@ -74,10 +102,15 @@ class DecisionTree:
 
     def fit(self, X, y, cat_features: Optional[list] = None):
         self.n_classes = len(np.unique(y))
+        self.n_features = X.shape[1]
         self.tree = self._build_tree(X, y, 0, cat_features)
 
     def predict(self, X: np.ndarray):
         return np.array([self._predict_tree(x, self.tree) for x in X])
+
+    def set_params(self, **params):
+        for param, value in params.items():
+            setattr(self, param, value)
 
     def _predict_tree(self, x: np.ndarray, node: Node) -> float:
         if node.leaf_value is not None:
@@ -86,12 +119,6 @@ class DecisionTree:
             return self._predict_tree(x, node.left)
         else:
             return self._predict_tree(x, node.right)
-
-    def predict_proba(self, X):
-        pass
-
-    def set_params(self, **params):
-        pass
 
     def _build_tree(self,
                     X: np.ndarray,
@@ -161,14 +188,21 @@ class DecisionTree:
     def _best_split(self,
                     X: np.ndarray,
                     y: np.ndarray,
-                    cat_features: Optional[list] = None) -> tuple[float,
-    Optional[int], Union[Optional[float], Optional[str]]]:
+                    cat_features: Optional[list] = None) -> \
+            tuple[float, Optional[int], Union[Optional[float], Optional[str]]]:
 
         best_gini_gain = 0
         best_feature_idx = None
         best_threshold = None
+        feature_indices = list(range(0, X.shape[1]))
 
-        for feature_idx in range(X.shape[1]):
+        if self.random_subspace:
+            feature_indices = np.random.choice(self.n_features,
+                                               self.F,
+                                               replace=False)
+
+        print('columns', feature_indices)
+        for feature_idx in feature_indices:
             thresholds = np.unique(X[:, feature_idx])
             for threshold in thresholds:
                 op_1, op_2 = self._set_operators(feature_idx, cat_features)
@@ -216,97 +250,3 @@ class DecisionTree:
         gini_gain = parent_gini - child_gini
 
         return gini_gain
-
-#
-#
-# @dataclass
-# class DecisionTree:
-#     criterion: TreeMethods = field(default=TreeMethods.CART)
-#     max_depth: int = field(default=2)
-#     min_samples_split: int = field(default=2)
-#     root = None
-#
-#     def fit(self, X: np.ndarray, y: np.ndarray) -> None:
-#         self.root = self._build_tree(X, y)
-#
-#     def predict(self, X: np.ndarray) -> np.ndarray:
-#         return np.array([self._predict_tree(x, self.root) for x in X])
-#
-#     def _build_tree(self, X, y, depth=0):
-#         n_samples, n_features = X.shape
-#
-#         # Stopping criteria: if the tree has reached its maximum depth or if there are too few samples to split
-#         if depth >= self.max_depth or n_samples < self.min_samples_split:
-#             return Node(value=self._most_common_label(y))
-#
-#         # Find the best feature and threshold to split on
-#         best_feature, best_threshold = self._best_split(X, y, n_samples,
-#                                                         n_features)
-#
-#         # Split the dataset into two subsets
-#         left_indices = X[:, best_feature] <= best_threshold
-#         right_indices = X[:, best_feature] > best_threshold
-#
-#         # Create the left and right subtrees recursively
-#         left = self._build_tree(X[left_indices], y[left_indices], depth + 1)
-#         right = self._build_tree(X[right_indices], y[right_indices], depth + 1)
-#
-#         # Create a new node with the best feature and threshold values and return it
-#         return Node(best_feature, best_threshold, left, right)
-#
-#     def _best_split(self, X, y, n_samples, n_features):
-#         best_feature = None
-#         best_threshold = None
-#         best_gini = 1
-#
-#         # Calculate the Gini impurity for each feature and threshold
-#         for feature_idx in range(n_features):
-#             thresholds = np.unique(X[:, feature_idx])
-#             for threshold in thresholds:
-#                 left_indices = X[:, feature_idx] <= threshold
-#                 right_indices = X[:, feature_idx] > threshold
-#
-#                 if np.sum(left_indices) > 0 and np.sum(right_indices) > 0:
-#                     gini = self._gini(y[left_indices], y[right_indices])
-#                     if gini < best_gini:
-#                         best_feature = feature_idx
-#                         best_threshold = threshold
-#                         best_gini = gini
-#
-#         return best_feature, best_threshold
-#
-#     def _gini(self, left_labels, right_labels):
-#         n_left = len(left_labels)
-#         n_right = len(right_labels)
-#         n_total = n_left + n_right
-#         gini_left = 1 - np.sum(
-#             [(np.sum(left_labels == c) / n_left) ** 2 for c in
-#              np.unique(left_labels)])
-#         gini_right = 1 - np.sum(
-#             [(np.sum(right_labels == c) / n_right) ** 2 for c in
-#              np.unique(right_labels)])
-#         return (n_left / n_total) * gini_left + (
-#                     n_right / n_total) * gini_right
-#
-#     def _predict_tree(self, x: np.ndarray, node: Node) -> float:
-#         if node.value is not None:
-#             return node.value
-#         if x[node.feature] < node.threshold:
-#             return self._predict_tree(x, node.left)
-#         else:
-#             return self._predict_tree(x, node.right)
-#
-#     def _most_common_label(self, y):
-#         """
-#         Find the most common label in the array y.
-#
-#         Parameters
-#         ----------
-#         y : array-like, shape (n_samples,)
-#             The array of labels.
-#
-#         Returns
-#         -------
-#         The most common label in y.
-#         """
-#         return Counter(y).most_common(1)[0][0]

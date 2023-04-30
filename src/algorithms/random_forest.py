@@ -2,7 +2,6 @@
 Implementation of the Random Forest algorithm.
 """
 import copy
-from enum import Enum, auto
 from dataclasses import dataclass, field
 from typing import Union, Optional
 import numpy as np
@@ -10,16 +9,11 @@ from scipy.stats import mode
 from sklearn.tree import DecisionTreeClassifier
 
 from src.algorithms.decision_tree import DecisionTree
-
-
-class RandomFeaturesMethods(Enum):
-    SQUARED = auto()
-    LOG = auto()
-    INT = auto()
+from src.algorithms.ensemble import RandomFeaturesMethods
 
 
 @dataclass
-class RandomForest:
+class _RandomForest:
     # Hyperparameters
     random_state: int = field(default=0)
     n_trees: int = field(default=100)
@@ -36,7 +30,7 @@ class RandomForest:
         self.feature_subsets = []
 
     @property
-    def n_random_features(self) -> int:
+    def F(self) -> int:
         method_functions = {'SQUARED': lambda n: int(np.sqrt(n)),
                             'LOG': lambda n: int(np.log2(n)),
                             'INT': lambda n: n}
@@ -71,7 +65,7 @@ class RandomForest:
                          random_state: int) -> tuple[np.ndarray, np.ndarray]:
         rs_generator = np.random.RandomState(random_state)
         indices = rs_generator.choice(self.n_features,
-                                      self.n_random_features,
+                                      self.F,
                                       replace=False)
         X_selected_feature = X[:, indices]
         return X_selected_feature, indices
