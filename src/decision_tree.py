@@ -1,5 +1,5 @@
 """
-Implementation of the Decision Tree algorithm using CART method.
+Implementation of the Decision Tree algorithm using the CART method.
 """
 from __future__ import annotations
 from typing import Optional, Union
@@ -10,6 +10,16 @@ import numpy as np
 
 
 class Operator(Enum):
+    """
+    Enumeration of comparison operators for use in creating comparisons.
+
+    Attributes:
+        - LE: Less than or equal to operator
+        - GT: Greater than operator
+        - EQ: Equal to operator
+        - NE: Not equal to operator
+    """
+
     LE = operator.le
     GT = operator.gt
     EQ = operator.eq
@@ -18,6 +28,20 @@ class Operator(Enum):
 
 @dataclass
 class Node:
+    """
+    Represents a node in a decision tree.
+
+    Attributes:
+        - feature: The feature index for splitting at this node.
+        - threshold: The threshold value for splitting at this node.
+        - gini: The Gini impurity score for this node.
+        - n_samples: The number of samples at this node.
+        - class_dist: An array of class distribution for the samples at this node.
+        - left: The left child node of this node.
+        - right: The right child node of this node.
+        - leaf_value: The predicted class value if this node is a leaf.
+    """
+    depth: int
     feature: Optional[int] = None
     threshold: Optional[float] = None
     gini: Optional[float] = None
@@ -29,10 +53,13 @@ class Node:
 
 
 class DecisionTree:
+    """
+    The main class for performing  Decision Tree Classifier.
+    """
 
     def __init__(self,
                  random_state: int = 0,
-                 max_depth: int = 2,
+                 max_depth: Optional[int] = None,
                  min_samples_split: int = 2,
                  F: Optional[int] = None,
                  random_subspace_node: bool = False):
@@ -113,8 +140,20 @@ class DecisionTree:
 
         # Stopping criteria: if the tree has reached its maximum depth
         # or if there are too few samples to split
-        if depth >= self.max_depth or n_samples < self.min_samples_split:
-            return Node(feature=None,
+        if self.max_depth:
+            if depth >= self.max_depth or n_samples < self.min_samples_split:
+                return Node(depth=depth,
+                            feature=None,
+                            threshold=None,
+                            gini=self._gini(y),
+                            n_samples=n_samples,
+                            class_dist=self._compute_class_dist(y),
+                            left=None,
+                            right=None,
+                            leaf_value=self._compute_leaf_value(y))
+        if n_samples < self.min_samples_split:
+            return Node(depth=depth,
+                        feature=None,
                         threshold=None,
                         gini=self._gini(y),
                         n_samples=n_samples,
@@ -130,8 +169,9 @@ class DecisionTree:
 
         # If best_feature_idx is None and best_threshold is None
         # return a leaf node
-        if best_feature_idx is None and best_threshold is None:
-            return Node(feature=None,
+        if best_feature_idx is None or best_threshold is None:
+            return Node(depth=depth,
+                        feature=None,
                         threshold=None,
                         gini=self._gini(y),
                         n_samples=n_samples,
@@ -158,7 +198,8 @@ class DecisionTree:
                                          depth + 1,
                                          cat_features)
 
-        node = Node(feature=best_feature_idx,
+        node = Node(depth=depth,
+                    feature=best_feature_idx,
                     threshold=best_threshold,
                     gini=self._gini(y),
                     n_samples=n_samples,
@@ -201,10 +242,11 @@ class DecisionTree:
                         if cat_features:
                             if best_feature_idx in cat_features:
                                 best_threshold = threshold
+                            else:
+                                best_threshold = float(threshold)
                         else:
                             best_threshold = float(threshold)
                         best_gini_gain = gini_gain
-
         return best_gini_gain, best_feature_idx, best_threshold
 
     def _compute_class_dist(self, y: np.ndarray) -> np.ndarray:

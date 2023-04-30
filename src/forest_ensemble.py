@@ -1,21 +1,29 @@
 """
-Implementation of the Decision Forest algorithm
+This module implements the RandomForest and DecisionForest classes
+for classification problems.
+
+- RandomForest is an ensemble method that uses a collection of
+decision trees with random bootstrap resamples of the data and random features
+used in the splitting of the nodes, which makes it robust against overfitting.
+
+- DecisionForest is an ensemble method that uses a collection of decision
+trees using a subspace of features.
 """
-import copy
 from typing import Optional, Union
 import numpy as np
 from scipy.stats import mode
 
 from src.decision_tree import DecisionTree
+from src.forest_tools import (check_types, make_one_tree, FMethodRF, FMethodDF)
 
 
 class RandomForest:
     def __init__(self,
                  random_state: int = 0,
                  n_trees: int = 100,
-                 max_depth: int = 2,
+                 max_depth: Optional[int] = None,
                  min_samples_split: int = 2,
-                 max_random_features: Union[str, int] = 'sqrt',
+                 max_random_features: Union[FMethodRF, int] = FMethodRF.SQRT,
                  bootstrap: bool = True,
                  random_subspace_node: bool = True,
                  ):
@@ -42,18 +50,22 @@ class RandomForest:
         self.trained_trees: list = []
 
     @property
-    def F(self):
-        method_functions = {'sqrt': lambda n: int(np.sqrt(n)),
-                            'log': lambda n: int(np.log2(n))}
-        if self.max_random_features in method_functions.keys():
-            return method_functions[self.max_random_features](self.n_features)
-        elif isinstance(self.max_random_features, int):
-            return self.max_random_features
-        else:
-            raise TypeError('random_features must be an integer, '
-                            '"sqrt" or "log"')
+    def F(self) -> int:
+        method_functions = {FMethodRF.SQRT: lambda n: int(np.sqrt(n)),
+                            FMethodRF.LOG: lambda n: int(np.log2(n))}
 
-    def fit(self, X: np.ndarray, y: np.ndarray) -> None:
+        if isinstance(self.max_random_features, int) and \
+                0 < self.max_random_features <= self.n_features:
+            return self.max_random_features
+        elif isinstance(self.max_random_features, FMethodRF):
+            return method_functions[self.max_random_features](self.n_features)
+        else:
+            raise TypeError('random_features must be FMethodRF '
+                            'instance or an integer between 0 and n_features')
+
+    def fit(self, X: np.ndarray,
+            y: np.ndarray,
+            cat_features: Optional[list] = None) -> None:
 
         assert X.ndim == 2, 'X must be two-dimensional array'
 
@@ -81,7 +93,7 @@ class RandomForest:
             random_state = tree.random_state
             X_bootstrap, y_bootstrap = self._make_bootstrap(X, y,
                                                             random_state)
-            tree.fit(X_bootstrap, y_bootstrap)
+            tree.fit(X_bootstrap, y_bootstrap, cat_features=cat_features)
             self.trained_trees.append(tree)
 
         assert len(self.trained_trees) == self.n_trees
@@ -130,9 +142,9 @@ class DecisionForest:
     def __init__(self,
                  random_state: int = 0,
                  n_trees: int = 100,
-                 max_depth: int = 2,
+                 max_depth: Optional[int] = None,
                  min_samples_split: int = 2,
-                 max_random_features: Union[str, float] = 0.5,
+                 max_random_features: Union[FMethodDF, float] = 0.5,
                  ):
 
         # Hyper parameters
@@ -156,17 +168,22 @@ class DecisionForest:
 
     @property
     def F(self):
-        method_functions = {'runif': lambda n: np.random.randint(1, n + 1)}
-        if self.max_random_features in method_functions.keys():
-            return method_functions[self.max_random_features](self.n_features)
-        elif isinstance(self.max_random_features, float) and \
-                self.max_random_features <= 1:
-            return int(self.max_random_features * self.n_features)
-        else:
-            raise TypeError('max_random_features must be a value between '
-                            '0 and 1 or "runif"')
+        method_functions = {FMethodDF.RUNIF: lambda n:
+        np.random.randint(1, n + 1)}
 
-    def fit(self, X: np.ndarray, y: np.ndarray) -> None:
+        if isinstance(self.max_random_features, float) and \
+                0 < self.max_random_features <= 1:
+            return int(self.max_random_features * self.n_features)
+
+        elif isinstance(self.max_random_features, FMethodDF):
+            return method_functions[self.max_random_features](self.n_features)
+        else:
+            raise TypeError('max_random_features must be a FMethodDF '
+                            'instance or a float between 0 - 1')
+
+    def fit(self, X: np.ndarray,
+            y: np.ndarray,
+            cat_features: Optional[list] = None) -> None:
 
         assert X.ndim == 2, 'X must be two-dimensional array'
 
@@ -194,7 +211,12 @@ class DecisionForest:
             random_state = tree.random_state
             X_random_feature, features_idxs = self._random_features(X,
                                                                     random_state)
-            tree.fit(X_random_feature, y)
+            if cat_features:
+                new_cat_features = self._map_cat_features(features_idxs,
+                                                          cat_features)
+            else:
+                new_cat_features = None
+            tree.fit(X_random_feature, y, cat_features=new_cat_features)
             self.feature_subsets.append(features_idxs)
             self.trained_trees.append(tree)
 
@@ -241,33 +263,8 @@ class DecisionForest:
         X_selected_feature = X[:, indices]
         return X_selected_feature, indices
 
-
-def check_types(random_state,
-                n_trees,
-                max_depth,
-                min_samples_split,
-                base_learner) -> None:
-    if not isinstance(random_state, int):
-        raise TypeError('random_state must be an integer')
-    if not isinstance(n_trees, int):
-        raise TypeError('n_trees must be an integer')
-    if not isinstance(max_depth, int):
-        raise TypeError('max_depth must be an integer')
-    if not isinstance(min_samples_split, int):
-        raise TypeError('min_samples_split must be an integer')
-    if not isinstance(base_learner, DecisionTree):
-        raise TypeError('base_learner must be an instance of DecisionTree')
-
-
-def make_one_tree(classifier: DecisionTree,
-                  rs_generator: np.random.RandomState) -> DecisionTree:
-    # copy the classifier algorithm (Decision Tree CART)
-    tree = copy.deepcopy(classifier)
-
-    # get random state
-    random_state = rs_generator.randint(np.iinfo(np.int32).max)
-    to_set = {'random_state': random_state}
-
-    # set random state
-    tree.set_params(**to_set)
-    return tree
+    @staticmethod
+    def _map_cat_features(features_idxs: np.ndarray,
+                          cat_features: list):
+        mapping = {val: i for i, val in enumerate(features_idxs)}
+        return [mapping[val] for val in cat_features if val in mapping.keys()]

@@ -9,15 +9,17 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
 
-from src.ensemble_algorithms import RandomForest, DecisionForest
+from src.forest_ensemble import RandomForest, DecisionForest
+from src.forest_tools import FMethodRF, FMethodDF
 
 CURRENT_PATH = Path(__file__).parent.parent
 
 ALGORITHM_NAMES = ['random forest', 'decision forest']
 N_TREES = [1, 10, 25, 50, 75, 100]
-F_RANDOM_FOREST = [1, 2, 'log', 'sqrt']
-F_DECISION_FOREST = [0.25, 0.5, 0.75, 'runif']
+F_RANDOM_FOREST = [1, 2, FMethodRF.LOG, FMethodRF.SQRT]
+F_DECISION_FOREST = [0.25, 0.5, 0.75, FMethodDF.RUNIF]
 
 
 @dataclass
@@ -52,6 +54,7 @@ class Experiment:
     y_train: np.ndarray
     X_test: np.ndarray
     y_test: np.ndarray
+    cat_features: Optional[list[int]] = None
     algorithm: Optional[Union[RandomForest, DecisionForest]] = None
 
     def __post_init__(self):
@@ -66,9 +69,13 @@ class Experiment:
                             'or "decision forest"')
 
     def accuracy(self) -> float:
-        self.algorithm.fit(self.X_train, self.y_train)
+        self.algorithm.fit(self.X_train, self.y_train, self.cat_features)
         y_pred = self.algorithm.predict(self.X_test)
         return accuracy_score(self.y_test, y_pred)
+
+
+def print_verbose(result: dict) -> None:
+    print("{" + ", ".join(f"'{k}': {v}" for k, v in result.items()) + "}")
 
 
 def run_experiment(name: str,
@@ -77,10 +84,12 @@ def run_experiment(name: str,
                    X_train: np.ndarray,
                    y_train: np.ndarray,
                    X_test: np.ndarray,
-                   y_test: np.ndarray) -> dict:
+                   y_test: np.ndarray,
+                   cat_features: Optional[list[int]] = None) -> dict:
     clf = Experiment(name, n_trees, max_random_features,
-                     X_train, y_train, X_test, y_test)
-    acc = clf.accuracy()
+                     X_train, y_train, X_test, y_test,
+                     cat_features=cat_features)
+    acc = round(clf.accuracy(), 3)
     return {'algorithm': name,
             'n_trees': n_trees,
             'F': max_random_features,
@@ -90,19 +99,27 @@ def run_experiment(name: str,
 def forest_interpreter(X_train: np.ndarray,
                        y_train: np.ndarray,
                        X_test: np.ndarray,
-                       y_test: np.ndarray) -> pd.DataFrame:
+                       y_test: np.ndarray,
+                       cat_features: Optional[list[int]] = None,
+                       verbose: bool = True) -> pd.DataFrame:
     data = []
     for name in ALGORITHM_NAMES:
         for n_trees in N_TREES:
             if name == 'random forest':
                 for max_random_features in F_RANDOM_FOREST:
                     result = run_experiment(name, n_trees, max_random_features,
-                                            X_train, y_train, X_test, y_test)
+                                            X_train, y_train, X_test, y_test,
+                                            cat_features=cat_features)
+                    if verbose:
+                        print_verbose(result)
                     data.append(result)
             else:
                 for max_random_features in F_DECISION_FOREST:
                     result = run_experiment(name, n_trees, max_random_features,
-                                            X_train, y_train, X_test, y_test)
+                                            X_train, y_train, X_test, y_test,
+                                            cat_features=cat_features)
+                    if verbose:
+                        print_verbose(result)
                     data.append(result)
 
     data_df = pd.DataFrame(data)
@@ -111,20 +128,26 @@ def forest_interpreter(X_train: np.ndarray,
 
 def main():
     # Three datasets
-    names = ['iris', 'iris']
-    datasets = [Dataset(name) for name in names]
+    names = ['titanic', 'iris', 'glass', 'wine-red', 'wine-white']
+    cat_features_datasets = [[0, 1, 6], None, None, None, None]
+    datasets = [Dataset(name, cat) for name, cat in zip(names,
+                                                        cat_features_datasets)]
+    print(f'You will train and test the following datasets: {names}\n')
 
     for dataset in datasets:
+        print('{:-^85}'.format(dataset.name.upper()))
         start_time = time.time()
         data_df = forest_interpreter(dataset.X_train,
                                      dataset.y_train,
                                      dataset.X_test,
-                                     dataset.y_test)
+                                     dataset.y_test,
+                                     dataset.cat_features,
+                                     verbose=True)
 
         path_to_save = f'data/processed/{dataset.name}_results.csv'
         data_df.to_csv(CURRENT_PATH / path_to_save)
         elapse_time = time.time() - start_time
-        print(f'{dataset.name.capitalize()} dataset:'
+        print(f'\n{dataset.name.capitalize()} dataset:'
               f' time: {elapse_time:.2f} s, '
               f'results are save in {path_to_save}')
 
