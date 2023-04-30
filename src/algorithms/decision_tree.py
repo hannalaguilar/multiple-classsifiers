@@ -39,15 +39,15 @@ class DecisionTree:
                  random_state: int = 0,
                  max_depth: int = 2,
                  min_samples_split: int = 2,
-                 max_random_features: Union[str, int] = 'sqrt',
-                 random_subspace: bool = False):
+                 F: Optional[int] = None,
+                 random_subspace_node: bool = False):
 
         # Hyper parameters
         self.random_state = random_state
         self.max_depth = max_depth
         self.min_samples_split = min_samples_split
-        self.max_random_features = max_random_features
-        self.random_subspace = random_subspace
+        self.F = F
+        self.random_subspace_node = random_subspace_node
 
         # Data
         self.n_classes: Optional[int] = None
@@ -56,7 +56,7 @@ class DecisionTree:
 
     def __repr__(self):
         return f'DecisionTree(random_state={self.random_state}, ' \
-               f'max_depth={self.max_depth}, n_features={self.n_features})'
+               f'max_depth={self.max_depth}, n_random_features={self.F})'
 
     @property
     def criterion(self):
@@ -65,18 +65,6 @@ class DecisionTree:
     @property
     def method(self):
         return 'CART'
-
-    @property
-    def F(self):
-        method_functions = {'sqrt': lambda n: int(np.sqrt(n)),
-                            'log': lambda n: int(np.log2(n))}
-        if self.max_random_features in method_functions.keys():
-            return method_functions[self.max_random_features](self.n_features)
-        elif isinstance(self.max_random_features, int):
-            return self.max_random_features
-        else:
-            raise TypeError('random_features must be an integer, '
-                            '"sqrt" or "log"')
 
     @staticmethod
     def _gini(y: np.ndarray) -> float:
@@ -196,12 +184,12 @@ class DecisionTree:
         best_threshold = None
         feature_indices = list(range(0, X.shape[1]))
 
-        if self.random_subspace:
+        if self.random_subspace_node:
             feature_indices = np.random.choice(self.n_features,
                                                self.F,
                                                replace=False)
 
-        print('columns', feature_indices)
+        # print('columns', feature_indices)
         for feature_idx in feature_indices:
             thresholds = np.unique(X[:, feature_idx])
             for threshold in thresholds:

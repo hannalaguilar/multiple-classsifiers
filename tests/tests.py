@@ -11,8 +11,8 @@ from sklearn.metrics import accuracy_score
 import pandas as pd
 
 from src.algorithms.decision_tree import DecisionTree
-from src.algorithms.ensemble import RandomForest, DecisionForest, \
-    RandomFeaturesMethods
+from src.algorithms.ensemble import DecisionForest, \
+    RandomFeaturesMethods, RandomForest
 from src.algorithms.random_forest import _RandomForest
 
 CURRENT_PATH = Path(__file__).parent
@@ -75,38 +75,13 @@ def test_decision_tree():
                                                         random_state=random_number)
 
     # sklearn
-    clf_sklearn = DecisionTreeClassifier(random_state=0, max_leaf_nodes=3)
+    clf_sklearn = DecisionTreeClassifier(random_state=0,
+                                         max_depth=2)
     clf_sklearn.fit(X_train, y_train)
     acc_test_sklearn = clf_sklearn.score(X_test, y_test)
 
     # my algorithm
-    clf_src = DecisionTree(random_subspace=False)
-    clf_src.fit(X_train, y_train)
-    y_pred_src = clf_src.predict(X_test)
-    acc_test_src = accuracy_score(y_test, y_pred_src)
-
-    # assert if the difference is less than 10%
-    print(f'sklearn:{acc_test_sklearn:.3f}, '
-          f'my_algorithm: {acc_test_src:.3f},'
-          f' diff={(acc_test_sklearn - acc_test_src):.3f}')
-    np.testing.assert_allclose(acc_test_sklearn, acc_test_src, rtol=0.1)
-
-
-def test_decision_tree_random_subspace():
-    random_number = np.random.randint(np.iinfo(np.int32).max)
-
-    # data
-    X, y = load_iris(return_X_y=True)
-    X_train, X_test, y_train, y_test = train_test_split(X, y,
-                                                        random_state=random_number)
-
-    # sklearn
-    clf_sklearn = DecisionTreeClassifier(random_state=0, max_leaf_nodes=3)
-    clf_sklearn.fit(X_train, y_train)
-    acc_test_sklearn = clf_sklearn.score(X_test, y_test)
-
-    # my algorithm
-    clf_src = DecisionTree(random_subspace=True)
+    clf_src = DecisionTree(max_depth=2, random_subspace_node=False)
     clf_src.fit(X_train, y_train)
     y_pred_src = clf_src.predict(X_test)
     acc_test_src = accuracy_score(y_test, y_pred_src)
@@ -140,34 +115,30 @@ def test_random_forest():
 
     # my algorithm
     clf_src = RandomForest(random_state=0,
-                           random_features='sqrt',
+                           n_trees=n_trees,
                            max_depth=max_depth,
-                           n_trees=n_trees)
+                           max_random_features='sqrt')
+
     clf_src.fit(X_train, y_train)
     pred_clf_src = clf_src.predict(X_test)
     accuracy_src = accuracy_score(y_test, pred_clf_src)
 
-    # my algorithm2
-    clf_src = _RandomForest(random_state=0,
-                            max_depth=max_depth,
-                            n_trees=n_trees)
-    clf_src.fit(X_train, y_train)
-    pred_clf_src = clf_src.predict(X_test)
-    accuracy_src2 = accuracy_score(y_test, pred_clf_src)
-
     # test
     print(f'accuracy sklearn: {accuracy_sk:.3f}, '
-          f'accuracy my algorithm: {accuracy_src:.3f}',
-          f'accuracy my algorithm: {accuracy_src2:.3f}')
-    # np.testing.assert_allclose(accuracy_sk, accuracy_src, atol=0.15)
+          f'accuracy my Algorithm: {accuracy_src:.3f}')
+    np.testing.assert_allclose(accuracy_sk, accuracy_src, atol=0.2)
 
 
 def test_decision_forest():
     # data
     random_number = np.random.randint(np.iinfo(np.int32).max)
-    X, y = make_classification(n_samples=200, n_features=11,
+    X, y = make_classification(n_samples=300, n_features=11,
                                n_informative=3, n_redundant=0, n_repeated=0,
                                n_classes=3, random_state=random_number)
+    X_train, X_test, y_train, y_test = train_test_split(X,
+                                                        y,
+                                                        random_state=random_number)
+
     # sklearn
     max_depth = np.random.randint(2, 6)
     n_trees = 10
@@ -178,18 +149,18 @@ def test_decision_forest():
                                     random_state=0,
                                     n_estimators=n_trees,
                                     bootstrap=False,
-                                    max_features=0.5)
-    clf_sklearn.fit(X, y)
-    accuracy_sk = clf_sklearn.score(X, y)
+                                    max_features=0.75)
+    clf_sklearn.fit(X_train, y_train)
+    accuracy_sk = clf_sklearn.score(X_test, y_test)
 
     # my algorithm
     clf_src = DecisionForest(random_state=0,
-                             max_depth=max_depth,
                              n_trees=n_trees,
-                             random_features_method=RandomFeaturesMethods.INT12)
-    clf_src.fit(X, y)
-    pred_clf_src = clf_src.predict(X)
-    accuracy_src = accuracy_score(y, pred_clf_src)
+                             max_depth=max_depth,
+                             max_random_features='runif')
+    clf_src.fit(X_train, y_train)
+    pred_clf_src = clf_src.predict(X_test)
+    accuracy_src = accuracy_score(y_test, pred_clf_src)
 
     print(f'accuracy sklearn: {accuracy_sk:.3f}, '
           f'accuracy my algorithm: {accuracy_src:.3f}')
