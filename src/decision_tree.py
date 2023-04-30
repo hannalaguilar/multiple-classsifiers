@@ -31,16 +31,8 @@ class Node:
     """
     Represents a node in a decision tree.
 
-    Attributes:
-        - feature: The feature index for splitting at this node.
-        - threshold: The threshold value for splitting at this node.
-        - gini: The Gini impurity score for this node.
-        - n_samples: The number of samples at this node.
-        - class_dist: An array of class distribution for the samples at this node.
-        - left: The left child node of this node.
-        - right: The right child node of this node.
-        - leaf_value: The predicted class value if this node is a leaf.
     """
+
     depth: int
     feature: Optional[int] = None
     threshold: Optional[float] = None
@@ -106,7 +98,7 @@ class DecisionTree:
         return op_1, op_2
 
     @staticmethod
-    def _compute_leaf_value(y: np.ndarray):
+    def _calculate_leaf_value(y: np.ndarray):
         unique, counts = np.unique(y, return_counts=True)
         return unique[np.argmax(counts)]
 
@@ -127,8 +119,7 @@ class DecisionTree:
             return node.leaf_value
         if x[node.feature] <= node.threshold:
             return self._predict_tree(x, node.left)
-        else:
-            return self._predict_tree(x, node.right)
+        return self._predict_tree(x, node.right)
 
     def _build_tree(self,
                     X: np.ndarray,
@@ -138,8 +129,7 @@ class DecisionTree:
 
         n_samples, n_features = X.shape
 
-        # Stopping criteria: if the tree has reached its maximum depth
-        # or if there are too few samples to split
+        # stopping criteria
         if self.max_depth:
             if depth >= self.max_depth or n_samples < self.min_samples_split:
                 return Node(depth=depth,
@@ -147,27 +137,27 @@ class DecisionTree:
                             threshold=None,
                             gini=self._gini(y),
                             n_samples=n_samples,
-                            class_dist=self._compute_class_dist(y),
+                            class_dist=self._calculate_class_dist(y),
                             left=None,
                             right=None,
-                            leaf_value=self._compute_leaf_value(y))
+                            leaf_value=self._calculate_leaf_value(y))
         if n_samples < self.min_samples_split:
             return Node(depth=depth,
                         feature=None,
                         threshold=None,
                         gini=self._gini(y),
                         n_samples=n_samples,
-                        class_dist=self._compute_class_dist(y),
+                        class_dist=self._calculate_class_dist(y),
                         left=None,
                         right=None,
-                        leaf_value=self._compute_leaf_value(y))
+                        leaf_value=self._calculate_leaf_value(y))
 
-        # Find the best feature and threshold to split on
+        # find the best feature and threshold to split on
         best_gini_gain, best_feature_idx, best_threshold = self._best_split(X,
                                                                             y,
                                                                             cat_features)
 
-        # If best_feature_idx is None and best_threshold is None
+        # if best_feature_idx is None or best_threshold is None
         # return a leaf node
         if best_feature_idx is None or best_threshold is None:
             return Node(depth=depth,
@@ -175,20 +165,20 @@ class DecisionTree:
                         threshold=None,
                         gini=self._gini(y),
                         n_samples=n_samples,
-                        class_dist=self._compute_class_dist(y),
+                        class_dist=self._calculate_class_dist(y),
                         left=None,
                         right=None,
-                        leaf_value=self._compute_leaf_value(y))
+                        leaf_value=self._calculate_leaf_value(y))
 
-        # Set operator if is continuous or categorical data
+        # set operator if is continuous or categorical data
         op_1, op_2 = self._set_operators(best_feature_idx, cat_features)
         op_1, op_2 = op_1.value, op_2.value
 
-        # Split the dataset into two subsets
+        # split the dataset into two subsets
         left_indices = op_1(X[:, best_feature_idx], best_threshold)
         right_indices = op_2(X[:, best_feature_idx], best_threshold)
 
-        # Create the left and right subtrees recursively
+        # create the left and right subtrees recursively
         left_subtree = self._build_tree(X[left_indices],
                                         y[left_indices],
                                         depth + 1,
@@ -203,7 +193,7 @@ class DecisionTree:
                     threshold=best_threshold,
                     gini=self._gini(y),
                     n_samples=n_samples,
-                    class_dist=self._compute_class_dist(y),
+                    class_dist=self._calculate_class_dist(y),
                     left=left_subtree,
                     right=right_subtree)
 
@@ -249,7 +239,7 @@ class DecisionTree:
                         best_gini_gain = gini_gain
         return best_gini_gain, best_feature_idx, best_threshold
 
-    def _compute_class_dist(self, y: np.ndarray) -> np.ndarray:
+    def _calculate_class_dist(self, y: np.ndarray) -> np.ndarray:
         class_dist = np.zeros(self.n_classes)
         unique, counts = np.unique(y, return_counts=True)
         for u, c in zip(unique, counts):
