@@ -125,8 +125,8 @@ def test_decision_tree():
     acc_test_src = accuracy_score(y_test, y_pred_src)
 
     # assert if the difference is less than 10%
-    print(f'sklearn:{acc_test_sklearn:.3f}, '
-          f'my_algorithm: {acc_test_src:.3f}')
+    print(f'accuracy sklearn:{acc_test_sklearn:.3f}, '
+          f'accuracy my algorithm: {acc_test_src:.3f}')
     np.testing.assert_allclose(acc_test_sklearn, acc_test_src, rtol=0.12)
 
 
