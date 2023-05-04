@@ -173,7 +173,7 @@ class DecisionForest:
         # Trained
         self.trained_trees: list = []
         self.feature_subsets: list = []
-        self.feature_importance: list = []
+        self.feature_importance: Union[list, np.ndarray] = []
 
     @property
     def F(self):

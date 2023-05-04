@@ -1,49 +1,49 @@
-,algorithm,n_trees,F,test_acc
-0,random forest,1,1,0.568
-1,random forest,1,2,0.528
-2,random forest,1,FMethodRF.LOG,0.532
-3,random forest,1,FMethodRF.SQRT,0.525
-4,random forest,10,1,0.638
-5,random forest,10,2,0.655
-6,random forest,10,FMethodRF.LOG,0.645
-7,random forest,10,FMethodRF.SQRT,0.658
-8,random forest,25,1,0.682
-9,random forest,25,2,0.68
-10,random forest,25,FMethodRF.LOG,0.695
-11,random forest,25,FMethodRF.SQRT,0.705
-12,random forest,50,1,0.682
-13,random forest,50,2,0.685
-14,random forest,50,FMethodRF.LOG,0.68
-15,random forest,50,FMethodRF.SQRT,0.715
-16,random forest,75,1,0.675
-17,random forest,75,2,0.695
-18,random forest,75,FMethodRF.LOG,0.692
-19,random forest,75,FMethodRF.SQRT,0.7
-20,random forest,100,1,0.692
-21,random forest,100,2,0.7
-22,random forest,100,FMethodRF.LOG,0.69
-23,random forest,100,FMethodRF.SQRT,0.692
-24,decision forest,1,0.25,0.492
-25,decision forest,1,0.5,0.595
-26,decision forest,1,0.75,0.63
-27,decision forest,1,FMethodDF.RUNIF,0.625
-28,decision forest,10,0.25,0.568
-29,decision forest,10,0.5,0.672
-30,decision forest,10,0.75,0.64
-31,decision forest,10,FMethodDF.RUNIF,0.655
-32,decision forest,25,0.25,0.6
-33,decision forest,25,0.5,0.68
-34,decision forest,25,0.75,0.668
-35,decision forest,25,FMethodDF.RUNIF,0.668
-36,decision forest,50,0.25,0.62
-37,decision forest,50,0.5,0.695
-38,decision forest,50,0.75,0.675
-39,decision forest,50,FMethodDF.RUNIF,0.682
-40,decision forest,75,0.25,0.638
-41,decision forest,75,0.5,0.68
-42,decision forest,75,0.75,0.675
-43,decision forest,75,FMethodDF.RUNIF,0.675
-44,decision forest,100,0.25,0.638
-45,decision forest,100,0.5,0.695
-46,decision forest,100,0.75,0.678
-47,decision forest,100,FMethodDF.RUNIF,0.665
+,algorithm,n_trees,F,train_acc,test_acc,feature_importance
+0,random forest,1,1,0.797,0.532,"[('alcohol', 0.467), ('volatile acidity', 0.206), ('citric acid', 0.085), ('total sulfur dioxide', 0.05), ('sulphates', 0.045), ('free sulfur dioxide', 0.044), ('density', 0.037), ('chlorides', 0.022), ('residual sugar', 0.018), ('fixed acidity', 0.015), ('pH', 0.012)]"
+1,random forest,1,2,0.813,0.54,"[('total sulfur dioxide', 0.348), ('fixed acidity', 0.195), ('chlorides', 0.123), ('alcohol', 0.12), ('free sulfur dioxide', 0.053), ('sulphates', 0.048), ('density', 0.041), ('residual sugar', 0.034), ('volatile acidity', 0.023), ('citric acid', 0.011), ('pH', 0.006)]"
+2,random forest,1,FMethodRF.LOG,0.813,0.575,"[('sulphates', 0.378), ('density', 0.207), ('volatile acidity', 0.13), ('free sulfur dioxide', 0.114), ('total sulfur dioxide', 0.068), ('alcohol', 0.047), ('fixed acidity', 0.027), ('chlorides', 0.011), ('residual sugar', 0.01), ('pH', 0.008), ('citric acid', 0.002)]"
+3,random forest,1,FMethodRF.SQRT,0.8,0.565,"[('citric acid', 0.407), ('alcohol', 0.238), ('total sulfur dioxide', 0.127), ('volatile acidity', 0.075), ('pH', 0.053), ('fixed acidity', 0.034), ('sulphates', 0.028), ('residual sugar', 0.012), ('density', 0.011), ('chlorides', 0.009), ('free sulfur dioxide', 0.006)]"
+4,random forest,10,1,0.981,0.665,"[('total sulfur dioxide', 0.158), ('pH', 0.139), ('sulphates', 0.133), ('alcohol', 0.1), ('free sulfur dioxide', 0.082), ('residual sugar', 0.082), ('fixed acidity', 0.072), ('citric acid', 0.066), ('density', 0.064), ('chlorides', 0.057), ('volatile acidity', 0.046)]"
+5,random forest,10,2,0.985,0.682,"[('alcohol', 0.205), ('sulphates', 0.131), ('total sulfur dioxide', 0.129), ('chlorides', 0.122), ('density', 0.09), ('fixed acidity', 0.086), ('free sulfur dioxide', 0.056), ('volatile acidity', 0.05), ('residual sugar', 0.049), ('pH', 0.041), ('citric acid', 0.041)]"
+6,random forest,10,FMethodRF.LOG,0.98,0.658,"[('alcohol', 0.246), ('total sulfur dioxide', 0.158), ('volatile acidity', 0.152), ('sulphates', 0.123), ('citric acid', 0.07), ('density', 0.069), ('free sulfur dioxide', 0.043), ('chlorides', 0.04), ('pH', 0.035), ('fixed acidity', 0.034), ('residual sugar', 0.031)]"
+7,random forest,10,FMethodRF.SQRT,0.976,0.655,"[('alcohol', 0.187), ('sulphates', 0.139), ('density', 0.12), ('volatile acidity', 0.117), ('total sulfur dioxide', 0.1), ('chlorides', 0.088), ('citric acid', 0.087), ('free sulfur dioxide', 0.055), ('residual sugar', 0.047), ('pH', 0.029), ('fixed acidity', 0.029)]"
+8,random forest,25,1,0.999,0.668,"[('volatile acidity', 0.115), ('chlorides', 0.108), ('pH', 0.107), ('total sulfur dioxide', 0.1), ('citric acid', 0.1), ('density', 0.092), ('fixed acidity', 0.087), ('sulphates', 0.085), ('alcohol', 0.073), ('free sulfur dioxide', 0.07), ('residual sugar', 0.063)]"
+9,random forest,25,2,0.999,0.698,"[('alcohol', 0.185), ('sulphates', 0.159), ('volatile acidity', 0.093), ('fixed acidity', 0.091), ('total sulfur dioxide', 0.085), ('chlorides', 0.081), ('citric acid', 0.077), ('density', 0.068), ('residual sugar', 0.068), ('free sulfur dioxide', 0.049), ('pH', 0.045)]"
+10,random forest,25,FMethodRF.LOG,0.999,0.695,"[('alcohol', 0.194), ('sulphates', 0.146), ('volatile acidity', 0.135), ('total sulfur dioxide', 0.121), ('density', 0.093), ('citric acid', 0.066), ('chlorides', 0.055), ('residual sugar', 0.05), ('free sulfur dioxide', 0.05), ('fixed acidity', 0.047), ('pH', 0.043)]"
+11,random forest,25,FMethodRF.SQRT,1.0,0.68,"[('alcohol', 0.234), ('sulphates', 0.195), ('volatile acidity', 0.106), ('total sulfur dioxide', 0.101), ('density', 0.101), ('fixed acidity', 0.06), ('pH', 0.05), ('citric acid', 0.047), ('chlorides', 0.037), ('free sulfur dioxide', 0.035), ('residual sugar', 0.034)]"
+12,random forest,50,1,1.0,0.702,"[('pH', 0.138), ('chlorides', 0.105), ('free sulfur dioxide', 0.101), ('density', 0.097), ('alcohol', 0.095), ('volatile acidity', 0.082), ('total sulfur dioxide', 0.081), ('residual sugar', 0.076), ('sulphates', 0.076), ('citric acid', 0.076), ('fixed acidity', 0.072)]"
+13,random forest,50,2,1.0,0.692,"[('alcohol', 0.142), ('total sulfur dioxide', 0.124), ('volatile acidity', 0.122), ('sulphates', 0.116), ('density', 0.107), ('fixed acidity', 0.093), ('chlorides', 0.069), ('residual sugar', 0.061), ('citric acid', 0.06), ('pH', 0.056), ('free sulfur dioxide', 0.049)]"
+14,random forest,50,FMethodRF.LOG,1.0,0.708,"[('alcohol', 0.174), ('total sulfur dioxide', 0.136), ('volatile acidity', 0.129), ('sulphates', 0.124), ('density', 0.104), ('chlorides', 0.072), ('citric acid', 0.071), ('fixed acidity', 0.065), ('residual sugar', 0.053), ('free sulfur dioxide', 0.037), ('pH', 0.035)]"
+15,random forest,50,FMethodRF.SQRT,1.0,0.688,"[('sulphates', 0.184), ('alcohol', 0.168), ('total sulfur dioxide', 0.138), ('volatile acidity', 0.126), ('density', 0.097), ('fixed acidity', 0.062), ('citric acid', 0.052), ('chlorides', 0.051), ('residual sugar', 0.043), ('pH', 0.041), ('free sulfur dioxide', 0.038)]"
+16,random forest,75,1,1.0,0.688,"[('chlorides', 0.113), ('alcohol', 0.109), ('free sulfur dioxide', 0.096), ('volatile acidity', 0.094), ('residual sugar', 0.093), ('total sulfur dioxide', 0.089), ('fixed acidity', 0.086), ('sulphates', 0.086), ('citric acid', 0.083), ('density', 0.082), ('pH', 0.069)]"
+17,random forest,75,2,1.0,0.71,"[('alcohol', 0.159), ('volatile acidity', 0.128), ('density', 0.127), ('sulphates', 0.121), ('total sulfur dioxide', 0.101), ('citric acid', 0.085), ('fixed acidity', 0.077), ('chlorides', 0.057), ('pH', 0.049), ('residual sugar', 0.048), ('free sulfur dioxide', 0.048)]"
+18,random forest,75,FMethodRF.LOG,1.0,0.708,"[('alcohol', 0.183), ('sulphates', 0.152), ('volatile acidity', 0.13), ('total sulfur dioxide', 0.126), ('density', 0.092), ('fixed acidity', 0.075), ('citric acid', 0.065), ('chlorides', 0.058), ('residual sugar', 0.042), ('free sulfur dioxide', 0.038), ('pH', 0.038)]"
+19,random forest,75,FMethodRF.SQRT,1.0,0.69,"[('alcohol', 0.182), ('sulphates', 0.17), ('volatile acidity', 0.159), ('total sulfur dioxide', 0.109), ('density', 0.084), ('chlorides', 0.066), ('citric acid', 0.059), ('fixed acidity', 0.049), ('free sulfur dioxide', 0.045), ('pH', 0.04), ('residual sugar', 0.036)]"
+20,random forest,100,1,1.0,0.692,"[('residual sugar', 0.104), ('fixed acidity', 0.104), ('chlorides', 0.1), ('sulphates', 0.097), ('density', 0.097), ('total sulfur dioxide', 0.096), ('alcohol', 0.094), ('citric acid', 0.087), ('volatile acidity', 0.078), ('pH', 0.072), ('free sulfur dioxide', 0.07)]"
+21,random forest,100,2,1.0,0.7,"[('volatile acidity', 0.162), ('alcohol', 0.154), ('density', 0.107), ('sulphates', 0.107), ('total sulfur dioxide', 0.092), ('citric acid', 0.092), ('chlorides', 0.073), ('fixed acidity', 0.07), ('residual sugar', 0.053), ('free sulfur dioxide', 0.045), ('pH', 0.044)]"
+22,random forest,100,FMethodRF.LOG,1.0,0.705,"[('alcohol', 0.192), ('sulphates', 0.166), ('volatile acidity', 0.135), ('total sulfur dioxide', 0.123), ('density', 0.086), ('citric acid', 0.065), ('chlorides', 0.059), ('fixed acidity', 0.051), ('pH', 0.042), ('residual sugar', 0.041), ('free sulfur dioxide', 0.04)]"
+23,random forest,100,FMethodRF.SQRT,1.0,0.712,"[('alcohol', 0.212), ('sulphates', 0.155), ('volatile acidity', 0.133), ('total sulfur dioxide', 0.121), ('density', 0.085), ('citric acid', 0.068), ('chlorides', 0.059), ('fixed acidity', 0.05), ('free sulfur dioxide', 0.043), ('residual sugar', 0.038), ('pH', 0.036)]"
+24,decision forest,1,0.25,0.975,0.492,"[('total sulfur dioxide', 0.523), ('density', 0.477), ('alcohol', 0.0), ('sulphates', 0.0), ('pH', 0.0), ('free sulfur dioxide', 0.0), ('chlorides', 0.0), ('residual sugar', 0.0), ('citric acid', 0.0), ('volatile acidity', 0.0), ('fixed acidity', 0.0)]"
+25,decision forest,1,0.5,1.0,0.595,"[('alcohol', 0.523), ('total sulfur dioxide', 0.251), ('density', 0.136), ('free sulfur dioxide', 0.064), ('chlorides', 0.026), ('sulphates', 0.0), ('pH', 0.0), ('residual sugar', 0.0), ('citric acid', 0.0), ('volatile acidity', 0.0), ('fixed acidity', 0.0)]"
+26,decision forest,1,0.75,1.0,0.63,"[('alcohol', 0.398), ('sulphates', 0.164), ('volatile acidity', 0.147), ('density', 0.093), ('total sulfur dioxide', 0.061), ('pH', 0.058), ('chlorides', 0.057), ('free sulfur dioxide', 0.022), ('residual sugar', 0.0), ('citric acid', 0.0), ('fixed acidity', 0.0)]"
+27,decision forest,1,FMethodDF.RUNIF,1.0,0.572,"[('total sulfur dioxide', 0.482), ('density', 0.365), ('chlorides', 0.091), ('free sulfur dioxide', 0.062), ('alcohol', 0.0), ('sulphates', 0.0), ('pH', 0.0), ('residual sugar', 0.0), ('citric acid', 0.0), ('volatile acidity', 0.0), ('fixed acidity', 0.0)]"
+28,decision forest,10,0.25,0.99,0.568,"[('density', 0.169), ('residual sugar', 0.145), ('free sulfur dioxide', 0.13), ('chlorides', 0.122), ('total sulfur dioxide', 0.119), ('fixed acidity', 0.109), ('alcohol', 0.075), ('volatile acidity', 0.074), ('pH', 0.031), ('citric acid', 0.026), ('sulphates', 0.0)]"
+29,decision forest,10,0.5,1.0,0.672,"[('alcohol', 0.428), ('volatile acidity', 0.114), ('total sulfur dioxide', 0.095), ('sulphates', 0.09), ('fixed acidity', 0.05), ('residual sugar', 0.043), ('pH', 0.042), ('citric acid', 0.04), ('density', 0.039), ('free sulfur dioxide', 0.035), ('chlorides', 0.025)]"
+30,decision forest,10,0.75,1.0,0.64,"[('alcohol', 0.361), ('sulphates', 0.176), ('volatile acidity', 0.133), ('total sulfur dioxide', 0.095), ('residual sugar', 0.061), ('density', 0.047), ('pH', 0.04), ('chlorides', 0.035), ('citric acid', 0.02), ('free sulfur dioxide', 0.017), ('fixed acidity', 0.015)]"
+31,decision forest,10,FMethodDF.RUNIF,1.0,0.655,"[('alcohol', 0.286), ('sulphates', 0.165), ('volatile acidity', 0.131), ('density', 0.107), ('fixed acidity', 0.068), ('total sulfur dioxide', 0.066), ('citric acid', 0.049), ('residual sugar', 0.048), ('chlorides', 0.045), ('pH', 0.021), ('free sulfur dioxide', 0.013)]"
+32,decision forest,25,0.25,0.997,0.6,"[('residual sugar', 0.145), ('density', 0.13), ('sulphates', 0.113), ('volatile acidity', 0.11), ('free sulfur dioxide', 0.103), ('fixed acidity', 0.092), ('chlorides', 0.088), ('total sulfur dioxide', 0.083), ('alcohol', 0.055), ('citric acid', 0.041), ('pH', 0.039)]"
+33,decision forest,25,0.5,1.0,0.68,"[('sulphates', 0.236), ('alcohol', 0.231), ('volatile acidity', 0.115), ('total sulfur dioxide', 0.086), ('density', 0.077), ('citric acid', 0.048), ('residual sugar', 0.048), ('fixed acidity', 0.046), ('chlorides', 0.043), ('pH', 0.04), ('free sulfur dioxide', 0.03)]"
+34,decision forest,25,0.75,1.0,0.668,"[('alcohol', 0.313), ('sulphates', 0.211), ('volatile acidity', 0.138), ('total sulfur dioxide', 0.082), ('residual sugar', 0.062), ('density', 0.052), ('chlorides', 0.046), ('pH', 0.032), ('citric acid', 0.024), ('fixed acidity', 0.022), ('free sulfur dioxide', 0.019)]"
+35,decision forest,25,FMethodDF.RUNIF,1.0,0.648,"[('alcohol', 0.24), ('sulphates', 0.191), ('volatile acidity', 0.14), ('density', 0.091), ('total sulfur dioxide', 0.074), ('residual sugar', 0.059), ('free sulfur dioxide', 0.054), ('pH', 0.046), ('fixed acidity', 0.04), ('citric acid', 0.039), ('chlorides', 0.026)]"
+36,decision forest,50,0.25,0.999,0.62,"[('total sulfur dioxide', 0.119), ('fixed acidity', 0.115), ('volatile acidity', 0.102), ('citric acid', 0.099), ('density', 0.095), ('sulphates', 0.095), ('residual sugar', 0.086), ('chlorides', 0.084), ('alcohol', 0.083), ('free sulfur dioxide', 0.082), ('pH', 0.039)]"
+37,decision forest,50,0.5,1.0,0.695,"[('alcohol', 0.21), ('sulphates', 0.19), ('total sulfur dioxide', 0.115), ('volatile acidity', 0.11), ('density', 0.078), ('fixed acidity', 0.065), ('citric acid', 0.064), ('chlorides', 0.047), ('residual sugar', 0.043), ('pH', 0.04), ('free sulfur dioxide', 0.038)]"
+38,decision forest,50,0.75,1.0,0.675,"[('alcohol', 0.291), ('sulphates', 0.217), ('volatile acidity', 0.124), ('total sulfur dioxide', 0.088), ('density', 0.069), ('residual sugar', 0.056), ('chlorides', 0.041), ('citric acid', 0.031), ('pH', 0.03), ('fixed acidity', 0.029), ('free sulfur dioxide', 0.023)]"
+39,decision forest,50,FMethodDF.RUNIF,1.0,0.675,"[('alcohol', 0.222), ('sulphates', 0.153), ('volatile acidity', 0.106), ('total sulfur dioxide', 0.088), ('density', 0.082), ('residual sugar', 0.078), ('fixed acidity', 0.063), ('citric acid', 0.061), ('chlorides', 0.049), ('free sulfur dioxide', 0.049), ('pH', 0.048)]"
+40,decision forest,75,0.25,0.999,0.638,"[('total sulfur dioxide', 0.138), ('volatile acidity', 0.124), ('fixed acidity', 0.112), ('sulphates', 0.107), ('chlorides', 0.086), ('residual sugar', 0.082), ('alcohol', 0.081), ('free sulfur dioxide', 0.079), ('density', 0.074), ('citric acid', 0.073), ('pH', 0.044)]"
+41,decision forest,75,0.5,1.0,0.68,"[('alcohol', 0.195), ('sulphates', 0.183), ('total sulfur dioxide', 0.126), ('volatile acidity', 0.126), ('fixed acidity', 0.068), ('density', 0.065), ('chlorides', 0.059), ('citric acid', 0.05), ('pH', 0.046), ('free sulfur dioxide', 0.043), ('residual sugar', 0.039)]"
+42,decision forest,75,0.75,1.0,0.675,"[('alcohol', 0.279), ('sulphates', 0.207), ('volatile acidity', 0.135), ('total sulfur dioxide', 0.097), ('density', 0.064), ('residual sugar', 0.057), ('chlorides', 0.041), ('pH', 0.034), ('fixed acidity', 0.033), ('citric acid', 0.028), ('free sulfur dioxide', 0.025)]"
+43,decision forest,75,FMethodDF.RUNIF,1.0,0.682,"[('alcohol', 0.214), ('sulphates', 0.165), ('volatile acidity', 0.121), ('total sulfur dioxide', 0.103), ('fixed acidity', 0.084), ('residual sugar', 0.065), ('density', 0.06), ('chlorides', 0.053), ('pH', 0.051), ('citric acid', 0.043), ('free sulfur dioxide', 0.042)]"
+44,decision forest,100,0.25,0.998,0.638,"[('total sulfur dioxide', 0.126), ('volatile acidity', 0.122), ('fixed acidity', 0.106), ('alcohol', 0.101), ('density', 0.098), ('sulphates', 0.096), ('chlorides', 0.086), ('residual sugar', 0.075), ('citric acid', 0.07), ('free sulfur dioxide', 0.068), ('pH', 0.051)]"
+45,decision forest,100,0.5,1.0,0.695,"[('alcohol', 0.201), ('sulphates', 0.161), ('volatile acidity', 0.137), ('total sulfur dioxide', 0.111), ('density', 0.082), ('fixed acidity', 0.07), ('chlorides', 0.057), ('citric acid', 0.052), ('pH', 0.046), ('residual sugar', 0.042), ('free sulfur dioxide', 0.039)]"
+46,decision forest,100,0.75,1.0,0.678,"[('alcohol', 0.289), ('sulphates', 0.19), ('volatile acidity', 0.142), ('total sulfur dioxide', 0.095), ('density', 0.067), ('residual sugar', 0.055), ('chlorides', 0.04), ('fixed acidity', 0.035), ('pH', 0.035), ('citric acid', 0.029), ('free sulfur dioxide', 0.023)]"
+47,decision forest,100,FMethodDF.RUNIF,1.0,0.698,"[('alcohol', 0.224), ('sulphates', 0.187), ('volatile acidity', 0.126), ('total sulfur dioxide', 0.099), ('density', 0.088), ('citric acid', 0.052), ('chlorides', 0.051), ('residual sugar', 0.05), ('pH', 0.047), ('fixed acidity', 0.044), ('free sulfur dioxide', 0.031)]"

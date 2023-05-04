@@ -1,49 +1,49 @@
-,algorithm,n_trees,F,test_acc
-0,random forest,1,1,0.921
-1,random forest,1,2,0.974
-2,random forest,1,FMethodRF.LOG,0.895
-3,random forest,1,FMethodRF.SQRT,0.868
-4,random forest,10,1,0.947
-5,random forest,10,2,0.974
-6,random forest,10,FMethodRF.LOG,0.974
-7,random forest,10,FMethodRF.SQRT,0.974
-8,random forest,25,1,0.974
-9,random forest,25,2,0.974
-10,random forest,25,FMethodRF.LOG,0.921
-11,random forest,25,FMethodRF.SQRT,0.974
-12,random forest,50,1,0.974
-13,random forest,50,2,0.974
-14,random forest,50,FMethodRF.LOG,0.974
-15,random forest,50,FMethodRF.SQRT,0.974
-16,random forest,75,1,0.974
-17,random forest,75,2,0.974
-18,random forest,75,FMethodRF.LOG,0.974
-19,random forest,75,FMethodRF.SQRT,0.974
-20,random forest,100,1,0.974
-21,random forest,100,2,0.974
-22,random forest,100,FMethodRF.LOG,0.921
-23,random forest,100,FMethodRF.SQRT,0.974
-24,decision forest,1,0.25,0.579
-25,decision forest,1,0.5,0.895
-26,decision forest,1,0.75,0.974
-27,decision forest,1,FMethodDF.RUNIF,0.974
-28,decision forest,10,0.25,0.711
-29,decision forest,10,0.5,0.947
-30,decision forest,10,0.75,0.974
-31,decision forest,10,FMethodDF.RUNIF,0.947
-32,decision forest,25,0.25,0.895
-33,decision forest,25,0.5,0.947
-34,decision forest,25,0.75,0.974
-35,decision forest,25,FMethodDF.RUNIF,0.974
-36,decision forest,50,0.25,0.895
-37,decision forest,50,0.5,0.947
-38,decision forest,50,0.75,0.974
-39,decision forest,50,FMethodDF.RUNIF,0.974
-40,decision forest,75,0.25,0.895
-41,decision forest,75,0.5,0.947
-42,decision forest,75,0.75,0.974
-43,decision forest,75,FMethodDF.RUNIF,0.974
-44,decision forest,100,0.25,0.947
-45,decision forest,100,0.5,0.947
-46,decision forest,100,0.75,0.974
-47,decision forest,100,FMethodDF.RUNIF,0.974
+,algorithm,n_trees,F,train_acc,test_acc,feature_importance
+0,random forest,1,1,0.929,0.816,"[('petal width (cm)', 0.503), ('sepal width (cm)', 0.222), ('sepal length (cm)', 0.212), ('petal length (cm)', 0.062)]"
+1,random forest,1,2,0.982,0.868,"[('petal length (cm)', 0.625), ('sepal length (cm)', 0.292), ('petal width (cm)', 0.083), ('sepal width (cm)', 0.0)]"
+2,random forest,1,FMethodRF.LOG,0.955,0.895,"[('petal width (cm)', 0.5), ('sepal length (cm)', 0.25), ('petal length (cm)', 0.208), ('sepal width (cm)', 0.042)]"
+3,random forest,1,FMethodRF.SQRT,0.973,0.868,"[('petal length (cm)', 0.5), ('sepal length (cm)', 0.333), ('petal width (cm)', 0.111), ('sepal width (cm)', 0.056)]"
+4,random forest,10,1,0.982,0.974,"[('sepal width (cm)', 0.386), ('petal length (cm)', 0.294), ('petal width (cm)', 0.169), ('sepal length (cm)', 0.151)]"
+5,random forest,10,2,1.0,0.921,"[('petal length (cm)', 0.459), ('petal width (cm)', 0.304), ('sepal length (cm)', 0.156), ('sepal width (cm)', 0.081)]"
+6,random forest,10,FMethodRF.LOG,1.0,0.974,"[('petal width (cm)', 0.542), ('petal length (cm)', 0.341), ('sepal length (cm)', 0.081), ('sepal width (cm)', 0.036)]"
+7,random forest,10,FMethodRF.SQRT,1.0,0.921,"[('petal length (cm)', 0.452), ('petal width (cm)', 0.35), ('sepal length (cm)', 0.141), ('sepal width (cm)', 0.057)]"
+8,random forest,25,1,1.0,0.921,"[('petal length (cm)', 0.388), ('sepal width (cm)', 0.214), ('petal width (cm)', 0.2), ('sepal length (cm)', 0.198)]"
+9,random forest,25,2,1.0,0.974,"[('petal length (cm)', 0.411), ('petal width (cm)', 0.358), ('sepal length (cm)', 0.174), ('sepal width (cm)', 0.057)]"
+10,random forest,25,FMethodRF.LOG,1.0,0.974,"[('petal width (cm)', 0.449), ('petal length (cm)', 0.343), ('sepal length (cm)', 0.166), ('sepal width (cm)', 0.042)]"
+11,random forest,25,FMethodRF.SQRT,1.0,0.974,"[('petal length (cm)', 0.439), ('petal width (cm)', 0.396), ('sepal length (cm)', 0.101), ('sepal width (cm)', 0.065)]"
+12,random forest,50,1,1.0,0.974,"[('petal length (cm)', 0.297), ('sepal length (cm)', 0.249), ('petal width (cm)', 0.237), ('sepal width (cm)', 0.217)]"
+13,random forest,50,2,1.0,0.974,"[('petal length (cm)', 0.436), ('petal width (cm)', 0.375), ('sepal length (cm)', 0.132), ('sepal width (cm)', 0.057)]"
+14,random forest,50,FMethodRF.LOG,1.0,0.974,"[('petal width (cm)', 0.426), ('petal length (cm)', 0.385), ('sepal length (cm)', 0.139), ('sepal width (cm)', 0.049)]"
+15,random forest,50,FMethodRF.SQRT,1.0,0.974,"[('petal length (cm)', 0.397), ('petal width (cm)', 0.379), ('sepal length (cm)', 0.163), ('sepal width (cm)', 0.06)]"
+16,random forest,75,1,1.0,0.974,"[('petal length (cm)', 0.307), ('petal width (cm)', 0.278), ('sepal length (cm)', 0.219), ('sepal width (cm)', 0.196)]"
+17,random forest,75,2,1.0,0.921,"[('petal length (cm)', 0.477), ('petal width (cm)', 0.342), ('sepal length (cm)', 0.123), ('sepal width (cm)', 0.058)]"
+18,random forest,75,FMethodRF.LOG,1.0,0.921,"[('petal length (cm)', 0.483), ('petal width (cm)', 0.323), ('sepal length (cm)', 0.144), ('sepal width (cm)', 0.051)]"
+19,random forest,75,FMethodRF.SQRT,1.0,0.974,"[('petal length (cm)', 0.433), ('petal width (cm)', 0.377), ('sepal length (cm)', 0.141), ('sepal width (cm)', 0.049)]"
+20,random forest,100,1,1.0,0.974,"[('petal width (cm)', 0.312), ('petal length (cm)', 0.254), ('sepal width (cm)', 0.242), ('sepal length (cm)', 0.192)]"
+21,random forest,100,2,1.0,0.974,"[('petal length (cm)', 0.419), ('petal width (cm)', 0.388), ('sepal length (cm)', 0.145), ('sepal width (cm)', 0.047)]"
+22,random forest,100,FMethodRF.LOG,1.0,0.974,"[('petal length (cm)', 0.437), ('petal width (cm)', 0.374), ('sepal length (cm)', 0.145), ('sepal width (cm)', 0.044)]"
+23,random forest,100,FMethodRF.SQRT,1.0,0.974,"[('petal width (cm)', 0.433), ('petal length (cm)', 0.377), ('sepal length (cm)', 0.133), ('sepal width (cm)', 0.057)]"
+24,decision forest,1,0.25,0.598,0.579,"[('sepal width (cm)', 1.0), ('petal width (cm)', 0.0), ('petal length (cm)', 0.0), ('sepal length (cm)', 0.0)]"
+25,decision forest,1,0.5,0.982,0.895,"[('petal width (cm)', 0.851), ('sepal width (cm)', 0.149), ('petal length (cm)', 0.0), ('sepal length (cm)', 0.0)]"
+26,decision forest,1,0.75,1.0,0.974,"[('petal width (cm)', 0.75), ('petal length (cm)', 0.167), ('sepal width (cm)', 0.083), ('sepal length (cm)', 0.0)]"
+27,decision forest,1,FMethodDF.RUNIF,0.982,0.895,"[('petal width (cm)', 0.851), ('sepal width (cm)', 0.149), ('petal length (cm)', 0.0), ('sepal length (cm)', 0.0)]"
+28,decision forest,10,0.25,0.92,0.711,"[('sepal length (cm)', 0.4), ('sepal width (cm)', 0.3), ('petal width (cm)', 0.2), ('petal length (cm)', 0.1)]"
+29,decision forest,10,0.5,1.0,0.947,"[('petal width (cm)', 0.401), ('petal length (cm)', 0.354), ('sepal length (cm)', 0.166), ('sepal width (cm)', 0.079)]"
+30,decision forest,10,0.75,1.0,0.974,"[('petal width (cm)', 0.471), ('petal length (cm)', 0.397), ('sepal width (cm)', 0.069), ('sepal length (cm)', 0.063)]"
+31,decision forest,10,FMethodDF.RUNIF,1.0,0.947,"[('petal length (cm)', 0.283), ('sepal width (cm)', 0.255), ('petal width (cm)', 0.246), ('sepal length (cm)', 0.215)]"
+32,decision forest,25,0.25,0.964,0.895,"[('sepal length (cm)', 0.32), ('petal width (cm)', 0.28), ('sepal width (cm)', 0.24), ('petal length (cm)', 0.16)]"
+33,decision forest,25,0.5,1.0,0.947,"[('petal width (cm)', 0.371), ('petal length (cm)', 0.309), ('sepal length (cm)', 0.204), ('sepal width (cm)', 0.116)]"
+34,decision forest,25,0.75,1.0,0.974,"[('petal width (cm)', 0.44), ('petal length (cm)', 0.408), ('sepal width (cm)', 0.083), ('sepal length (cm)', 0.068)]"
+35,decision forest,25,FMethodDF.RUNIF,1.0,0.974,"[('petal width (cm)', 0.384), ('petal length (cm)', 0.324), ('sepal width (cm)', 0.161), ('sepal length (cm)', 0.131)]"
+36,decision forest,50,0.25,0.964,0.895,"[('sepal length (cm)', 0.3), ('petal width (cm)', 0.28), ('sepal width (cm)', 0.24), ('petal length (cm)', 0.18)]"
+37,decision forest,50,0.5,1.0,0.947,"[('petal width (cm)', 0.388), ('petal length (cm)', 0.33), ('sepal length (cm)', 0.187), ('sepal width (cm)', 0.095)]"
+38,decision forest,50,0.75,1.0,0.974,"[('petal width (cm)', 0.443), ('petal length (cm)', 0.398), ('sepal width (cm)', 0.085), ('sepal length (cm)', 0.075)]"
+39,decision forest,50,FMethodDF.RUNIF,1.0,0.974,"[('petal width (cm)', 0.398), ('petal length (cm)', 0.339), ('sepal length (cm)', 0.146), ('sepal width (cm)', 0.117)]"
+40,decision forest,75,0.25,0.964,0.895,"[('petal width (cm)', 0.333), ('sepal width (cm)', 0.253), ('sepal length (cm)', 0.253), ('petal length (cm)', 0.16)]"
+41,decision forest,75,0.5,1.0,0.947,"[('petal width (cm)', 0.403), ('petal length (cm)', 0.317), ('sepal length (cm)', 0.181), ('sepal width (cm)', 0.099)]"
+42,decision forest,75,0.75,1.0,0.974,"[('petal width (cm)', 0.462), ('petal length (cm)', 0.38), ('sepal width (cm)', 0.089), ('sepal length (cm)', 0.069)]"
+43,decision forest,75,FMethodDF.RUNIF,1.0,0.974,"[('petal width (cm)', 0.429), ('petal length (cm)', 0.286), ('sepal width (cm)', 0.181), ('sepal length (cm)', 0.104)]"
+44,decision forest,100,0.25,0.973,0.947,"[('petal width (cm)', 0.31), ('sepal length (cm)', 0.25), ('sepal width (cm)', 0.24), ('petal length (cm)', 0.2)]"
+45,decision forest,100,0.5,1.0,0.947,"[('petal length (cm)', 0.374), ('petal width (cm)', 0.364), ('sepal length (cm)', 0.168), ('sepal width (cm)', 0.095)]"
+46,decision forest,100,0.75,1.0,0.974,"[('petal length (cm)', 0.433), ('petal width (cm)', 0.406), ('sepal width (cm)', 0.09), ('sepal length (cm)', 0.071)]"
+47,decision forest,100,FMethodDF.RUNIF,1.0,0.974,"[('petal width (cm)', 0.367), ('petal length (cm)', 0.356), ('sepal length (cm)', 0.153), ('sepal width (cm)', 0.124)]"

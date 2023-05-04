@@ -38,6 +38,7 @@ class Dataset:
         y = self.df.iloc[:, -1].values
         self.X_train, self.X_test, self.y_train, self.y_test = \
             train_test_split(X, y, random_state=0)
+        self.columns = self.df.columns[:-1].to_list()
 
     @property
     def data_path(self):
@@ -76,10 +77,14 @@ class Experiment:
             raise TypeError('algorithm must be "random forest" '
                             'or "decision forest"')
 
-    def accuracy(self) -> float:
+    def results(self) -> tuple[float, float, np.ndarray]:
         self.algorithm.fit(self.X_train, self.y_train, self.cat_features)
-        y_pred = self.algorithm.predict(self.X_test)
-        return accuracy_score(self.y_test, y_pred)
+        y_test_pred = self.algorithm.predict(self.X_test)
+        y_train_pred = self.algorithm.predict(self.X_train)
+        train_acc = accuracy_score(self.y_train, y_train_pred)
+        test_acc = accuracy_score(self.y_test, y_test_pred)
+        fi = self.algorithm.feature_importance
+        return train_acc, test_acc, fi
 
 
 def print_verbose(result: dict) -> None:
@@ -96,6 +101,7 @@ def run_experiment(name: str,
                    y_train: np.ndarray,
                    X_test: np.ndarray,
                    y_test: np.ndarray,
+                   columns_name: list,
                    cat_features: Optional[list[int]] = None) -> dict:
     """
     Runs an experiment using the Experiment class to test the accuracy
@@ -106,17 +112,26 @@ def run_experiment(name: str,
     clf = Experiment(name, n_trees, max_random_features,
                      X_train, y_train, X_test, y_test,
                      cat_features=cat_features)
-    acc = round(clf.accuracy(), 3)
+    train_acc, test_acc, fi = clf.results()
+    sorted_features = np.argsort(fi)[::-1]
+    fi_ = fi[sorted_features]
+    columns_name_sorted = np.array(columns_name)[sorted_features].tolist()
+    fi_verbose = [(name, round(value, 3)) for name, value
+                  in zip(columns_name_sorted, fi_)]
+
     return {'algorithm': name,
             'n_trees': n_trees,
             'F': max_random_features,
-            'test_acc': acc}
+            'train_acc': round(train_acc, 3),
+            'test_acc': round(test_acc, 3),
+            'feature_importance': fi_verbose}
 
 
 def forest_interpreter(X_train: np.ndarray,
                        y_train: np.ndarray,
                        X_test: np.ndarray,
                        y_test: np.ndarray,
+                       columns_name: list,
                        cat_features: Optional[list[int]] = None,
                        verbose: bool = True) -> pd.DataFrame:
     """
@@ -133,6 +148,7 @@ def forest_interpreter(X_train: np.ndarray,
                 for max_random_features in F_RANDOM_FOREST:
                     result = run_experiment(name, n_trees, max_random_features,
                                             X_train, y_train, X_test, y_test,
+                                            columns_name=columns_name,
                                             cat_features=cat_features)
                     if verbose:
                         print_verbose(result)
@@ -141,6 +157,7 @@ def forest_interpreter(X_train: np.ndarray,
                 for max_random_features in F_DECISION_FOREST:
                     result = run_experiment(name, n_trees, max_random_features,
                                             X_train, y_train, X_test, y_test,
+                                            columns_name=columns_name,
                                             cat_features=cat_features)
                     if verbose:
                         print_verbose(result)
@@ -169,6 +186,7 @@ def main() -> None:
                                      dataset.y_train,
                                      dataset.X_test,
                                      dataset.y_test,
+                                     dataset.columns,
                                      dataset.cat_features,
                                      verbose=True)
 

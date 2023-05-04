@@ -1,49 +1,49 @@
-,algorithm,n_trees,F,test_acc
-0,random forest,1,1,0.555
-1,random forest,1,2,0.869
-2,random forest,1,FMethodRF.LOG,0.784
-3,random forest,1,FMethodRF.SQRT,0.848
-4,random forest,10,1,0.677
-5,random forest,10,2,0.738
-6,random forest,10,FMethodRF.LOG,0.741
-7,random forest,10,FMethodRF.SQRT,0.817
-8,random forest,25,1,0.735
-9,random forest,25,2,0.787
-10,random forest,25,FMethodRF.LOG,0.832
-11,random forest,25,FMethodRF.SQRT,0.875
-12,random forest,50,1,0.747
-13,random forest,50,2,0.857
-14,random forest,50,FMethodRF.LOG,0.875
-15,random forest,50,FMethodRF.SQRT,0.854
-16,random forest,75,1,0.863
-17,random forest,75,2,0.875
-18,random forest,75,FMethodRF.LOG,0.866
-19,random forest,75,FMethodRF.SQRT,0.866
-20,random forest,100,1,0.796
-21,random forest,100,2,0.872
-22,random forest,100,FMethodRF.LOG,0.872
-23,random forest,100,FMethodRF.SQRT,0.848
-24,decision forest,1,0.25,0.881
-25,decision forest,1,0.5,0.878
-26,decision forest,1,0.75,0.628
-27,decision forest,1,FMethodDF.RUNIF,0.881
-28,decision forest,10,0.25,0.558
-29,decision forest,10,0.5,0.765
-30,decision forest,10,0.75,0.753
-31,decision forest,10,FMethodDF.RUNIF,0.698
-32,decision forest,25,0.25,0.683
-33,decision forest,25,0.5,0.814
-34,decision forest,25,0.75,0.787
-35,decision forest,25,FMethodDF.RUNIF,0.826
-36,decision forest,50,0.25,0.61
-37,decision forest,50,0.5,0.707
-38,decision forest,50,0.75,0.817
-39,decision forest,50,FMethodDF.RUNIF,0.723
-40,decision forest,75,0.25,0.558
-41,decision forest,75,0.5,0.744
-42,decision forest,75,0.75,0.796
-43,decision forest,75,FMethodDF.RUNIF,0.808
-44,decision forest,100,0.25,0.558
-45,decision forest,100,0.5,0.713
-46,decision forest,100,0.75,0.79
-47,decision forest,100,FMethodDF.RUNIF,0.771
+,algorithm,n_trees,F,train_acc,test_acc,feature_importance
+0,random forest,1,1,0.704,0.631,"[('Pclass', 0.366), ('Age', 0.334), ('Embarked', 0.111), ('Fare', 0.087), ('Sex', 0.059), ('SibSp', 0.043), ('Parch', 0.0)]"
+1,random forest,1,2,0.765,0.72,"[('Embarked', 0.336), ('Pclass', 0.163), ('Fare', 0.138), ('Parch', 0.131), ('Sex', 0.117), ('Age', 0.087), ('SibSp', 0.029)]"
+2,random forest,1,FMethodRF.LOG,0.825,0.726,"[('Fare', 0.596), ('Sex', 0.136), ('SibSp', 0.091), ('Age', 0.063), ('Embarked', 0.045), ('Pclass', 0.039), ('Parch', 0.031)]"
+3,random forest,1,FMethodRF.SQRT,0.807,0.787,"[('Pclass', 0.346), ('Parch', 0.242), ('Embarked', 0.135), ('Sex', 0.117), ('Age', 0.097), ('Fare', 0.04), ('SibSp', 0.022)]"
+4,random forest,10,1,0.848,0.866,"[('Parch', 0.215), ('Sex', 0.167), ('Age', 0.164), ('Pclass', 0.131), ('SibSp', 0.129), ('Embarked', 0.102), ('Fare', 0.092)]"
+5,random forest,10,2,0.853,0.829,"[('Sex', 0.213), ('Age', 0.187), ('Pclass', 0.172), ('Parch', 0.151), ('Fare', 0.128), ('Embarked', 0.098), ('SibSp', 0.05)]"
+6,random forest,10,FMethodRF.LOG,0.878,0.832,"[('Fare', 0.23), ('Age', 0.18), ('Sex', 0.168), ('Parch', 0.128), ('Embarked', 0.101), ('SibSp', 0.097), ('Pclass', 0.095)]"
+7,random forest,10,FMethodRF.SQRT,0.882,0.82,"[('Fare', 0.298), ('Sex', 0.173), ('Age', 0.163), ('Parch', 0.147), ('Embarked', 0.079), ('Pclass', 0.072), ('SibSp', 0.068)]"
+8,random forest,25,1,0.813,0.787,"[('SibSp', 0.169), ('Age', 0.159), ('Fare', 0.154), ('Embarked', 0.147), ('Sex', 0.129), ('Pclass', 0.129), ('Parch', 0.113)]"
+9,random forest,25,2,0.885,0.863,"[('Fare', 0.2), ('Sex', 0.169), ('Pclass', 0.163), ('Parch', 0.139), ('Age', 0.131), ('SibSp', 0.106), ('Embarked', 0.091)]"
+10,random forest,25,FMethodRF.LOG,0.898,0.875,"[('Fare', 0.269), ('Age', 0.179), ('Pclass', 0.143), ('Sex', 0.142), ('Parch', 0.115), ('SibSp', 0.094), ('Embarked', 0.059)]"
+11,random forest,25,FMethodRF.SQRT,0.877,0.857,"[('Fare', 0.196), ('Sex', 0.171), ('Pclass', 0.17), ('Age', 0.144), ('Embarked', 0.116), ('Parch', 0.109), ('SibSp', 0.095)]"
+12,random forest,50,1,0.862,0.878,"[('Age', 0.178), ('Sex', 0.155), ('Fare', 0.152), ('SibSp', 0.137), ('Parch', 0.133), ('Embarked', 0.124), ('Pclass', 0.121)]"
+13,random forest,50,2,0.886,0.875,"[('Fare', 0.24), ('Sex', 0.193), ('Age', 0.135), ('Pclass', 0.128), ('Parch', 0.124), ('SibSp', 0.093), ('Embarked', 0.087)]"
+14,random forest,50,FMethodRF.LOG,0.88,0.848,"[('Fare', 0.259), ('Sex', 0.175), ('Age', 0.166), ('Pclass', 0.134), ('Parch', 0.094), ('SibSp', 0.088), ('Embarked', 0.085)]"
+15,random forest,50,FMethodRF.SQRT,0.893,0.881,"[('Fare', 0.245), ('Age', 0.167), ('Sex', 0.159), ('Pclass', 0.132), ('Parch', 0.121), ('SibSp', 0.095), ('Embarked', 0.081)]"
+16,random forest,75,1,0.863,0.884,"[('Age', 0.167), ('Fare', 0.164), ('Sex', 0.157), ('SibSp', 0.139), ('Parch', 0.134), ('Pclass', 0.12), ('Embarked', 0.118)]"
+17,random forest,75,2,0.889,0.854,"[('Fare', 0.237), ('Sex', 0.184), ('Age', 0.16), ('Pclass', 0.136), ('SibSp', 0.097), ('Parch', 0.093), ('Embarked', 0.092)]"
+18,random forest,75,FMethodRF.LOG,0.874,0.866,"[('Fare', 0.222), ('Sex', 0.18), ('Age', 0.158), ('Pclass', 0.131), ('Parch', 0.119), ('Embarked', 0.098), ('SibSp', 0.091)]"
+19,random forest,75,FMethodRF.SQRT,0.883,0.857,"[('Fare', 0.236), ('Sex', 0.17), ('Age', 0.152), ('Pclass', 0.124), ('Parch', 0.122), ('SibSp', 0.099), ('Embarked', 0.097)]"
+20,random forest,100,1,0.856,0.866,"[('Fare', 0.151), ('Sex', 0.147), ('Age', 0.146), ('SibSp', 0.143), ('Pclass', 0.142), ('Embarked', 0.136), ('Parch', 0.135)]"
+21,random forest,100,2,0.882,0.848,"[('Fare', 0.236), ('Age', 0.167), ('Sex', 0.165), ('Pclass', 0.141), ('SibSp', 0.116), ('Parch', 0.089), ('Embarked', 0.085)]"
+22,random forest,100,FMethodRF.LOG,0.885,0.869,"[('Fare', 0.225), ('Sex', 0.174), ('Age', 0.168), ('Pclass', 0.121), ('Parch', 0.118), ('SibSp', 0.1), ('Embarked', 0.095)]"
+23,random forest,100,FMethodRF.SQRT,0.887,0.875,"[('Fare', 0.203), ('Age', 0.167), ('Sex', 0.165), ('Pclass', 0.157), ('Parch', 0.133), ('SibSp', 0.093), ('Embarked', 0.082)]"
+24,decision forest,1,0.25,0.846,0.881,"[('Sex', 1.0), ('Embarked', 0.0), ('Fare', 0.0), ('Parch', 0.0), ('SibSp', 0.0), ('Age', 0.0), ('Pclass', 0.0)]"
+25,decision forest,1,0.5,0.904,0.878,"[('Fare', 0.589), ('Sex', 0.333), ('Embarked', 0.077), ('Parch', 0.0), ('SibSp', 0.0), ('Age', 0.0), ('Pclass', 0.0)]"
+26,decision forest,1,0.75,0.83,0.628,"[('Sex', 0.333), ('Fare', 0.26), ('Age', 0.202), ('Pclass', 0.185), ('Embarked', 0.019), ('Parch', 0.0), ('SibSp', 0.0)]"
+27,decision forest,1,FMethodDF.RUNIF,0.846,0.881,"[('Sex', 1.0), ('Embarked', 0.0), ('Fare', 0.0), ('Parch', 0.0), ('SibSp', 0.0), ('Age', 0.0), ('Pclass', 0.0)]"
+28,decision forest,10,0.25,0.663,0.558,"[('Sex', 0.3), ('Pclass', 0.3), ('Fare', 0.1), ('Parch', 0.1), ('SibSp', 0.1), ('Age', 0.1), ('Embarked', 0.0)]"
+29,decision forest,10,0.5,0.88,0.765,"[('Fare', 0.376), ('Sex', 0.167), ('Age', 0.163), ('Parch', 0.093), ('Embarked', 0.091), ('Pclass', 0.085), ('SibSp', 0.026)]"
+30,decision forest,10,0.75,0.878,0.753,"[('Sex', 0.267), ('Fare', 0.24), ('Age', 0.19), ('Pclass', 0.154), ('SibSp', 0.068), ('Parch', 0.057), ('Embarked', 0.025)]"
+31,decision forest,10,FMethodDF.RUNIF,0.832,0.695,"[('Fare', 0.219), ('Pclass', 0.179), ('Age', 0.176), ('Sex', 0.167), ('SibSp', 0.131), ('Parch', 0.103), ('Embarked', 0.025)]"
+32,decision forest,25,0.25,0.774,0.683,"[('Sex', 0.32), ('Fare', 0.2), ('Embarked', 0.12), ('Parch', 0.12), ('Pclass', 0.12), ('SibSp', 0.08), ('Age', 0.04)]"
+33,decision forest,25,0.5,0.908,0.814,"[('Fare', 0.395), ('Sex', 0.173), ('Age', 0.153), ('Parch', 0.098), ('Embarked', 0.071), ('Pclass', 0.065), ('SibSp', 0.044)]"
+34,decision forest,25,0.75,0.914,0.787,"[('Fare', 0.29), ('Sex', 0.28), ('Age', 0.175), ('Pclass', 0.126), ('SibSp', 0.064), ('Parch', 0.046), ('Embarked', 0.018)]"
+35,decision forest,25,FMethodDF.RUNIF,0.932,0.851,"[('Fare', 0.322), ('Sex', 0.227), ('Age', 0.155), ('Pclass', 0.11), ('SibSp', 0.077), ('Parch', 0.059), ('Embarked', 0.05)]"
+36,decision forest,50,0.25,0.709,0.61,"[('Sex', 0.24), ('Embarked', 0.16), ('SibSp', 0.16), ('Fare', 0.14), ('Parch', 0.14), ('Pclass', 0.14), ('Age', 0.02)]"
+37,decision forest,50,0.5,0.862,0.707,"[('Fare', 0.294), ('Age', 0.175), ('Parch', 0.137), ('Sex', 0.133), ('Pclass', 0.097), ('SibSp', 0.09), ('Embarked', 0.074)]"
+38,decision forest,50,0.75,0.932,0.817,"[('Fare', 0.295), ('Sex', 0.24), ('Age', 0.178), ('Pclass', 0.124), ('SibSp', 0.079), ('Parch', 0.061), ('Embarked', 0.023)]"
+39,decision forest,50,FMethodDF.RUNIF,0.886,0.784,"[('Fare', 0.257), ('Sex', 0.22), ('Pclass', 0.135), ('Age', 0.126), ('SibSp', 0.106), ('Parch', 0.088), ('Embarked', 0.067)]"
+40,decision forest,75,0.25,0.663,0.558,"[('Sex', 0.24), ('Embarked', 0.173), ('Pclass', 0.173), ('Fare', 0.147), ('SibSp', 0.133), ('Parch', 0.107), ('Age', 0.027)]"
+41,decision forest,75,0.5,0.875,0.744,"[('Fare', 0.304), ('Age', 0.165), ('Sex', 0.133), ('Pclass', 0.129), ('Parch', 0.104), ('Embarked', 0.083), ('SibSp', 0.083)]"
+42,decision forest,75,0.75,0.925,0.796,"[('Fare', 0.288), ('Sex', 0.249), ('Age', 0.172), ('Pclass', 0.134), ('SibSp', 0.076), ('Parch', 0.056), ('Embarked', 0.025)]"
+43,decision forest,75,FMethodDF.RUNIF,0.914,0.802,"[('Fare', 0.319), ('Sex', 0.218), ('Age', 0.151), ('Pclass', 0.141), ('SibSp', 0.064), ('Parch', 0.059), ('Embarked', 0.048)]"
+44,decision forest,100,0.25,0.663,0.558,"[('Sex', 0.21), ('Pclass', 0.17), ('Embarked', 0.15), ('Fare', 0.15), ('Parch', 0.14), ('SibSp', 0.13), ('Age', 0.05)]"
+45,decision forest,100,0.5,0.862,0.713,"[('Fare', 0.27), ('Age', 0.174), ('Pclass', 0.143), ('Sex', 0.14), ('Parch', 0.105), ('SibSp', 0.087), ('Embarked', 0.079)]"
+46,decision forest,100,0.75,0.923,0.79,"[('Fare', 0.287), ('Sex', 0.247), ('Age', 0.181), ('Pclass', 0.132), ('SibSp', 0.071), ('Parch', 0.059), ('Embarked', 0.024)]"
+47,decision forest,100,FMethodDF.RUNIF,0.913,0.823,"[('Fare', 0.246), ('Sex', 0.217), ('Age', 0.172), ('Pclass', 0.13), ('SibSp', 0.102), ('Parch', 0.08), ('Embarked', 0.052)]"
