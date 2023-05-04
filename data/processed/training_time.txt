@@ -1,0 +1,6 @@
+Titanic dataset: time: 510.62 s, results are save in data/processed/titanic_results.csv
+Iris dataset: time: 44.66 s, results are save in data/processed/iris_results.csv
+Glass dataset: time: 408.79 s, results are save in data/processed/glass_results.csv
+Wine-red dataset: time: 3361.57 s, results are save in data/processed/wine-red_results.csv
+Wine-white dataset: time: 10112.20 s, results are save in data/processed/wine-white_results.csv
+
