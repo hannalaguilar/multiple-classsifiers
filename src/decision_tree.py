@@ -66,7 +66,10 @@ class DecisionTree:
         # Data
         self.n_classes: Optional[int] = None
         self.n_features: Optional[int] = None
+
+        # Trained
         self.tree: Optional[Node] = None
+        self.feature_importance = None
 
     def __repr__(self):
         return f'DecisionTree(random_state={self.random_state}, ' \
@@ -106,6 +109,8 @@ class DecisionTree:
         self.n_classes = len(np.unique(y))
         self.n_features = X.shape[1]
         self.tree = self._build_tree(X, y, 0, cat_features)
+        self.feature_importance = self.get_feature_importance(self.tree,
+                                                              self.n_features)
 
     def predict(self, X: np.ndarray):
         return np.array([self._predict_tree(x, self.tree) for x in X])
@@ -265,3 +270,19 @@ class DecisionTree:
         gini_gain = parent_gini - child_gini
 
         return gini_gain
+
+    def get_feature_importance(self, node, n_features):
+        # initialize with zeros
+        feature_counts = np.zeros((n_features,), dtype=float)
+
+        #  get features recursively
+        if node.feature is not None:
+            feature_counts[node.feature] += 1
+            feature_counts += self.get_feature_importance(node.left,
+                                                          n_features)
+            feature_counts += self.get_feature_importance(node.right,
+                                                          n_features)
+        if np.sum(feature_counts) == 0:
+            return np.zeros((n_features,))
+
+        return feature_counts / np.sum(feature_counts)

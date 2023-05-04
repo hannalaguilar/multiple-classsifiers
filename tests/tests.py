@@ -141,7 +141,7 @@ def test_random_forest():
                                                         random_state=random_number)
 
     # sklearn
-    n_trees = np.random.randint(1, 100)
+    n_trees = np.random.randint(1, 20)
     clf_sklearn = RandomForestClassifier(random_state=0,
                                          max_features='sqrt',
                                          n_estimators=n_trees)

@@ -47,7 +47,10 @@ class RandomForest:
         # Data
         self.n_samples: Optional[int] = None
         self.n_features: Optional[int] = None
+
+        # Trained
         self.trained_trees: list = []
+        self.feature_importance: list = []
 
     @property
     def F(self) -> int:
@@ -95,8 +98,11 @@ class RandomForest:
                                                             random_state)
             tree.fit(X_bootstrap, y_bootstrap, cat_features=cat_features)
             self.trained_trees.append(tree)
+            self.feature_importance.append(tree.feature_importance)
 
         assert len(self.trained_trees) == self.n_trees
+        self.feature_importance = np.mean(self.feature_importance, axis=0)
+        assert round(self.feature_importance.sum(), 3) == 1.0
 
     def predict(self, X: Union[list, np.ndarray]) -> np.ndarray:
         """
@@ -163,8 +169,11 @@ class DecisionForest:
         # Data
         self.n_samples: Optional[int] = None
         self.n_features: Optional[int] = None
+
+        # Trained
         self.trained_trees: list = []
         self.feature_subsets: list = []
+        self.feature_importance: list = []
 
     @property
     def F(self):
@@ -219,8 +228,14 @@ class DecisionForest:
             tree.fit(X_random_feature, y, cat_features=new_cat_features)
             self.feature_subsets.append(features_idxs)
             self.trained_trees.append(tree)
+            feature_importance = tree.feature_importance
+            feature_importance_reshape = self._mapping_feature_importance(
+                features_idxs, feature_importance, self.n_features)
+            self.feature_importance.append(feature_importance_reshape)
 
         assert len(self.trained_trees) == self.n_trees
+        self.feature_importance = np.mean(self.feature_importance, axis=0)
+        assert round(self.feature_importance.sum(), 3) == 1.0
 
     def predict(self, X: Union[list, np.ndarray]) -> np.ndarray:
         """
@@ -268,3 +283,12 @@ class DecisionForest:
                           cat_features: list):
         mapping = {val: i for i, val in enumerate(features_idxs)}
         return [mapping[val] for val in cat_features if val in mapping.keys()]
+
+    @staticmethod
+    def _mapping_feature_importance(features_idxs, feature_importance,
+                                    n_features):
+        fi = np.zeros(n_features)
+        mapping = {i: val for i, val in enumerate(features_idxs)}
+        for i, value in mapping.items():
+            fi[value] = feature_importance[i]
+        return fi
