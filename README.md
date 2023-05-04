@@ -16,7 +16,7 @@ pip install -r requirements.txt
 
 ### Run main.py:
  ```
-python src/main.py
+python -m src.main
  ```
 
 Example of output:
