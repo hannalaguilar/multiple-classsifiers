@@ -11,7 +11,7 @@ import numpy as np
 
 class Operator(Enum):
     """
-    Enumeration of comparison operators for use in creating comparisons.
+    Enumeration of comparison operators for categorical or continuos feature.
 
     Attributes:
         - LE: Less than or equal to operator
@@ -19,9 +19,10 @@ class Operator(Enum):
         - EQ: Equal to operator
         - NE: Not equal to operator
     """
-
+    # continuos features
     LE = operator.le
     GT = operator.gt
+    # categorical features
     EQ = operator.eq
     NE = operator.ne
 
