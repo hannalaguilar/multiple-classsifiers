@@ -190,6 +190,21 @@ class DecisionForest:
             raise TypeError('max_random_features must be a FMethodDF '
                             'instance or a float between 0 - 1')
 
+    @staticmethod
+    def _map_cat_features(features_idxs: np.ndarray,
+                          cat_features: list):
+        mapping = {val: i for i, val in enumerate(features_idxs)}
+        return [mapping[val] for val in cat_features if val in mapping.keys()]
+
+    @staticmethod
+    def _mapping_feature_importance(features_idxs, feature_importance,
+                                    n_features):
+        fi = np.zeros(n_features)
+        mapping = {i: val for i, val in enumerate(features_idxs)}
+        for i, value in mapping.items():
+            fi[value] = feature_importance[i]
+        return fi
+
     def fit(self, X: np.ndarray,
             y: np.ndarray,
             cat_features: Optional[list] = None) -> None:
@@ -278,17 +293,4 @@ class DecisionForest:
         X_selected_feature = X[:, indices]
         return X_selected_feature, indices
 
-    @staticmethod
-    def _map_cat_features(features_idxs: np.ndarray,
-                          cat_features: list):
-        mapping = {val: i for i, val in enumerate(features_idxs)}
-        return [mapping[val] for val in cat_features if val in mapping.keys()]
 
-    @staticmethod
-    def _mapping_feature_importance(features_idxs, feature_importance,
-                                    n_features):
-        fi = np.zeros(n_features)
-        mapping = {i: val for i, val in enumerate(features_idxs)}
-        for i, value in mapping.items():
-            fi[value] = feature_importance[i]
-        return fi
