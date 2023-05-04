@@ -32,7 +32,6 @@ You will train and test the following datasets: ['titanic', 'iris', 'glass', 'wi
 {'algorithm': random forest, 'n_trees': 1, 'F': FMethodRF.SQRT, 'train_acc': 0.859, 'test_acc': 0.823, 'feature_importance': [('Sex', 0.333), ('SibSp', 0.209), ('Fare', 0.126), ('Age', 0.101), ('Parch', 0.096), ('Pclass', 0.077), ('Embarked', 0.057)]}
 
 ...
-
 ```
 
 ### Generate figures
@@ -55,4 +54,6 @@ Example of output:
 .accuracy sklearn:0.921, accuracy my algorithm: 0.921
 .accuracy sklearn: 0.453, accuracy my algorithm: 0.413
 .accuracy sklearn: 0.653, accuracy my algorithm: 0.640
+
+...
  ```
